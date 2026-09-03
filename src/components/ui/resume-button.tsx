@@ -11,7 +11,7 @@ import { cn } from "@/lib/cn";
  * - Press: small scale compression (via CSS :active)
  * - Download: brief checkmark confirmation state
  */
-export function ResumeButton({ className }: { className?: string }) {
+export function ResumeButton({ href = "/resume.pdf", className }: { href?: string; className?: string }) {
   const [isPulsing, setIsPulsing] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
 
@@ -26,7 +26,7 @@ export function ResumeButton({ className }: { className?: string }) {
 
   return (
     <a
-      href="/resume.pdf"
+      href={href}
       download
       onClick={handleClick}
       className={cn(

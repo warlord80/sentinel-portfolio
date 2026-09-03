@@ -13,6 +13,7 @@ const nav = [
   { label: "Certifications", href: "/admin/certifications" },
   { label: "Writeups", href: "/admin/writeups" },
   { label: "Submissions", href: "/admin/submissions" },
+  { label: "Social Links", href: "/admin/social" },
   { label: "Settings", href: "/admin/settings" },
 ];
 

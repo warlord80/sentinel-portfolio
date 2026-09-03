@@ -82,5 +82,29 @@ export interface SiteSettings {
   about_focus: string;
   about_base: string;
   about_status: string;
+  /** CMS-managed resume PDF URL */
+  resume_url: string;
   updated_at: string;
+}
+
+export interface SocialLink {
+  id: string;
+  name: string;
+  href: string;
+  /** Icon key: "linkedin" | "x" | "whatsapp" | "github" | "email" */
+  icon: string;
+  order_index: number;
+  enabled: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PageView {
+  id: string;
+  path: string;
+  section: string | null;
+  referrer: string | null;
+  user_agent: string | null;
+  ip_hash: string | null;
+  created_at: string;
 }

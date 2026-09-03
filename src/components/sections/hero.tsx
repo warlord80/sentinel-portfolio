@@ -16,7 +16,7 @@ import { useParallax } from "@/components/motion/use-parallax";
  *
  * Subtle scroll parallax is applied to decorative elements for depth.
  */
-export function Hero() {
+export function Hero({ resumeUrl = "/resume.pdf" }: { resumeUrl?: string }) {
   const spacerRef = useRef<HTMLDivElement>(null);
 
   useParallax(spacerRef, { amount: -60, speed: 0.8 });
@@ -49,7 +49,7 @@ export function Hero() {
             <Button href="#contact" variant="secondary">
               Contact
             </Button>
-            <ResumeButton />
+            <ResumeButton href={resumeUrl} />
           </div>
         </HeroEntrance>
 
