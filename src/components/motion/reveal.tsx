@@ -20,24 +20,29 @@ interface RevealProps {
   className?: string;
   /** Stagger children by this amount (seconds). 0 = no stagger */
   stagger?: number;
+  /** Whether the element has already been revealed (prevents flash) */
+  reveal?: boolean;
 }
 
 /**
  * Generic scroll-triggered reveal wrapper. Fades + slides content into view
- * when it crosses the scroll threshold. Disabled entirely when the user
- * prefers reduced motion.
+ * when it crosses the scroll threshold. Uses a subtle ease-out with slight
+ * scale for a more premium feel. Disabled entirely when the user prefers
+ * reduced motion.
  */
 export function Reveal({
   children,
   delay = 0,
-  duration = 0.8,
-  y = 40,
+  duration = 0.9,
+  y = 30,
   className,
   stagger = 0,
+  reveal = true,
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!reveal) return;
     const el = ref.current;
     if (!el) return;
     const prefersReduced = window.matchMedia(
@@ -45,30 +50,32 @@ export function Reveal({
     ).matches;
     if (prefersReduced) return;
 
-    const targets = stagger > 0 ? el.children : [el];
+    const targets = stagger > 0 ? Array.from(el.children) : [el];
 
-    gsap.set(targets, { opacity: 0, y });
+    gsap.set(targets, { opacity: 0, y, scale: 0.99 });
 
-    const trigger = ScrollTrigger.create({
+    const trig = ScrollTrigger.create({
       trigger: el,
-      start: "top 88%",
+      start: "top 85%",
       once: true,
       onEnter: () => {
         gsap.to(targets, {
           opacity: 1,
           y: 0,
+          scale: 1,
           duration,
           delay,
           stagger: stagger > 0 ? stagger : undefined,
-          ease: "power3.out",
+          ease: "expo.out",
+          overwrite: "auto",
         });
       },
     });
 
     return () => {
-      trigger.kill();
+      trig.kill();
     };
-  }, [delay, duration, y, stagger]);
+  }, [delay, duration, y, stagger, reveal]);
 
   return (
     <div ref={ref} className={className}>

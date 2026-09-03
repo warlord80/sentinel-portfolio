@@ -48,12 +48,12 @@ export function Projects() {
         </div>
       </Reveal>
 
-      <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2">
+      <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2">
         {projects.map((project, i) => (
           <Reveal key={project.number} delay={i * 0.1}>
             <article
               className={
-                "group flex flex-col justify-between rounded-md border border-line bg-surface/40 p-8 transition-colors duration-200 hover:border-accent/50 " +
+                "group flex flex-col justify-between rounded-md border border-line bg-surface/40 p-6 sm:p-8 transition-colors duration-200 hover:border-accent/50 " +
                 (i % 2 === 1 ? "md:mt-16" : "")
               }
             >
@@ -64,8 +64,8 @@ export function Projects() {
                 <Tag>{project.status}</Tag>
               </div>
 
-              <div className="mt-12 flex flex-col gap-4">
-                <h3 className="font-display text-[clamp(1.5rem,2.5vw,2.25rem)] font-medium leading-tight tracking-[-0.01em] text-foreground">
+              <div className="mt-8 flex flex-col gap-3 sm:mt-12 sm:gap-4">
+                <h3 className="font-display text-[clamp(1.375rem,2.5vw,2.25rem)] font-medium leading-tight tracking-[-0.01em] text-foreground">
                   {project.title}
                 </h3>
                 <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted">
@@ -74,14 +74,14 @@ export function Projects() {
                 <p className="max-w-md text-sm leading-relaxed text-foreground/70">
                   {project.description}
                 </p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {project.tech.map((t) => (
                     <Tag key={t}>{t}</Tag>
                   ))}
                 </div>
               </div>
 
-              <div className="mt-8">
+              <div className="mt-6 sm:mt-8">
                 <Button href="#contact" variant="ghost" size="sm">
                   Explore Case Study
                 </Button>

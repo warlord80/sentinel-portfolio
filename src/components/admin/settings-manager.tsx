@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { getSiteSettings, updateSiteSettings } from "@/app/actions/admin";
+import { updateSiteSettings } from "@/app/actions/admin";
 import type { SiteSettings } from "@/lib/types";
 
 export function SettingsManager({ settings }: { settings: SiteSettings | null }) {

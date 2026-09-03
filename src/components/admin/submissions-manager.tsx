@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { getContactSubmissions, updateSubmissionStatus, deleteSubmission } from "@/app/actions/admin";
+import { updateSubmissionStatus, deleteSubmission } from "@/app/actions/admin";
 
 interface Submission {
   id: string;

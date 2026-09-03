@@ -323,7 +323,45 @@ select:focus {
   .resume-border-trace,
   .resume-btn-flash,
   .hover-lift:hover,
-  .text-shimmer {
+  .text-shimmer,
+  .ticker-scroll,
+  .flip-digit span {
     animation: none !important;
   }
+  .flip-digit span {
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+  }
+  .ticker-scroll {
+    transform: none !important;
+  }
+}
+
+/* ── Flip Clock Digits ──────────────────────────────────────────── */
+.flip-digit {
+  min-width: 0.65em;
+  text-align: center;
+}
+
+/* ── Technical Ticker ───────────────────────────────────────────── */
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-scroll {
+  animation: ticker-scroll 40s linear infinite;
+  will-change: transform;
+}
+
+/* ── Available Status Glow ──────────────────────────────────────── */
+.available-status {
+  cursor: default;
+}
+
+/* ── Section Exit (scroll-driven) ───────────────────────────────── */
+@keyframes subtle-fade-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0.4; transform: translateY(-8px); }
 }

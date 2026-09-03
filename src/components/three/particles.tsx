@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo, useEffect } from "react";
+import { useRef, useMemo } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { useThreeContext } from "./context";
@@ -30,8 +30,9 @@ function initParticles(count: number) {
 /**
  * Floating dust particles — drift slowly through the scene.
  * React to cursor proximity: pushed away when the cursor gets close.
+ * Uses squared-distance checks and plane geometry for performance.
  */
-export function Particles({ count = 200 }: ParticlesProps) {
+export function Particles({ count = 120 }: ParticlesProps) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const { cursor } = useThreeContext();
 
@@ -39,18 +40,6 @@ export function Particles({ count = 200 }: ParticlesProps) {
   const dataRef = useRef<ReturnType<typeof initParticles>>(initParticles(count));
 
   const dummy = useMemo(() => new THREE.Object3D(), []);
-
-  useEffect(() => {
-    // Initialize positions once on mount
-    const data = dataRef.current;
-    if (!data) return;
-    for (let i = 0; i < count; i++) {
-      const i3 = i * 3;
-      data.pos[i3] = (Math.random() - 0.5) * 16;
-      data.pos[i3 + 1] = (Math.random() - 0.5) * 10;
-      data.pos[i3 + 2] = (Math.random() - 0.5) * 12 - 2;
-    }
-  }, [count]);
 
   useFrame((_, delta) => {
     const mesh = meshRef.current;
@@ -71,11 +60,12 @@ export function Particles({ count = 200 }: ParticlesProps) {
       pos[i3 + 1] += vel[i3 + 1];
       pos[i3 + 2] += vel[i3 + 2];
 
-      // Cursor repulsion
+      // Cursor repulsion — use squared distance (no sqrt)
       const dx = pos[i3] - s.cursorX;
       const dy = pos[i3 + 1] - s.cursorY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 2.0 && dist > 0.01) {
+      const distSq = dx * dx + dy * dy;
+      if (distSq < 4.0 && distSq > 0.0001) {
+        const dist = Math.sqrt(distSq);
         const force = (2.0 - dist) * 0.015;
         pos[i3] += (dx / dist) * force;
         pos[i3 + 1] += (dy / dist) * force;
@@ -101,12 +91,14 @@ export function Particles({ count = 200 }: ParticlesProps) {
 
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, count]}>
-      <sphereGeometry args={[1, 4, 4]} />
+      {/* Plane geometry (4 verts) instead of sphere (26 verts) for performance */}
+      <planeGeometry args={[1, 1]} />
       <meshBasicMaterial
         color="#c5a059"
         transparent
         opacity={0.35}
         depthWrite={false}
+        side={THREE.DoubleSide}
       />
     </instancedMesh>
   );

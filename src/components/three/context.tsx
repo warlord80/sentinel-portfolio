@@ -17,11 +17,22 @@ interface ScrollState {
   section: string | null;
 }
 
+interface DeviceMotionState {
+  /** Tilt X (-1 to 1) */
+  tiltX: number;
+  /** Tilt Y (-1 to 1) */
+  tiltY: number;
+  /** Whether device motion is active */
+  enabled: boolean;
+}
+
 interface ThreeContextValue {
   cursor: CursorState;
   scroll: ScrollState;
   click: boolean;
   tier: "high" | "medium" | "low";
+  deviceMotion: DeviceMotionState;
+  requestMotionPermission: () => void;
 }
 
 const ThreeContext = createContext<ThreeContextValue>({
@@ -29,6 +40,8 @@ const ThreeContext = createContext<ThreeContextValue>({
   scroll: { progress: 0, velocity: 0, section: null },
   click: false,
   tier: "medium",
+  deviceMotion: { tiltX: 0, tiltY: 0, enabled: false },
+  requestMotionPermission: () => {},
 });
 
 export function useThreeContext() {
@@ -37,15 +50,29 @@ export function useThreeContext() {
 
 const sections = ["about", "skills", "projects", "experience", "certifications", "writeups", "contact"];
 
+/**
+ * ThreeProvider — manages cursor, scroll, click, and device motion state.
+ *
+ * R3F components read from refs (no re-renders).
+ * React DOM consumers get throttled state updates (~10fps).
+ */
 export function ThreeProvider({ children, tier }: { children: ReactNode; tier: "high" | "medium" | "low" }) {
   const cursorRef = useRef({ x: 0, y: 0 });
-  const [scroll, setScroll] = useState<ScrollState>({ progress: 0, velocity: 0, section: null });
   const clickRef = useRef(false);
-  const [clickState, setClickState] = useState(false);
   const lastScrollY = useRef(0);
-  const rafId = useRef(0);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const sectionEls = useRef<Map<string, Element>>(new Map());
+  const motionRef = useRef({ tiltX: 0, tiltY: 0 });
+  const motionEnabledRef = useRef(false);
+
+  // Throttled cursor state for React DOM consumers only (~10fps)
+  const [cursor, setCursor] = useState<CursorState>({ x: 0, y: 0 });
+  // Throttled scroll state for React DOM consumers
+  const [scroll, setScroll] = useState<ScrollState>({ progress: 0, velocity: 0, section: null });
+  const [clickState, setClickState] = useState(false);
+  const [deviceMotion, setDeviceMotion] = useState<DeviceMotionState>({
+    tiltX: 0, tiltY: 0, enabled: false,
+  });
 
   useEffect(() => {
     // Cache section elements once
@@ -54,11 +81,22 @@ export function ThreeProvider({ children, tier }: { children: ReactNode; tier: "
       if (el) sectionEls.current.set(id, el);
     }
 
+    let cursorRafId = 0;
+    let scrollRafId = 0;
+    let motionRafId = 0;
+
     const onMouseMove = (e: MouseEvent) => {
       cursorRef.current = {
         x: (e.clientX / window.innerWidth) * 2 - 1,
         y: -(e.clientY / window.innerHeight) * 2 + 1,
       };
+      // Throttle cursor state updates to ~10fps for React DOM
+      if (!cursorRafId) {
+        cursorRafId = requestAnimationFrame(() => {
+          setCursor({ x: cursorRef.current.x, y: cursorRef.current.y });
+          cursorRafId = 0;
+        });
+      }
     };
 
     const onClick = () => {
@@ -72,8 +110,8 @@ export function ThreeProvider({ children, tier }: { children: ReactNode; tier: "
     };
 
     const onScroll = () => {
-      cancelAnimationFrame(rafId.current);
-      rafId.current = requestAnimationFrame(() => {
+      if (scrollRafId) return;
+      scrollRafId = requestAnimationFrame(() => {
         const y = window.scrollY;
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         const progress = maxScroll > 0 ? y / maxScroll : 0;
@@ -89,44 +127,61 @@ export function ThreeProvider({ children, tier }: { children: ReactNode; tier: "
         }
 
         setScroll({ progress, velocity, section: activeSection });
+        scrollRafId = 0;
+      });
+    };
+
+    const onDeviceOrientation = (e: DeviceOrientationEvent) => {
+      if (!motionEnabledRef.current) return;
+      if (motionRafId) return;
+      motionRafId = requestAnimationFrame(() => {
+        // Gamma: left/right tilt (-90 to 90), Beta: front/back tilt (-180 to 180)
+        const tiltX = Math.max(-1, Math.min(1, (e.gamma ?? 0) / 45));
+        const tiltY = Math.max(-1, Math.min(1, ((e.beta ?? 0) - 45) / 45));
+        motionRef.current = { tiltX, tiltY };
+        setDeviceMotion({ tiltX, tiltY, enabled: true });
+        motionRafId = 0;
       });
     };
 
     window.addEventListener("mousemove", onMouseMove, { passive: true });
     window.addEventListener("click", onClick, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("deviceorientation", onDeviceOrientation, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("click", onClick);
       window.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(rafId.current);
+      window.removeEventListener("deviceorientation", onDeviceOrientation);
+      cancelAnimationFrame(cursorRafId);
+      cancelAnimationFrame(scrollRafId);
+      cancelAnimationFrame(motionRafId);
       clearTimeout(timeoutRef.current);
     };
   }, []);
 
-  // Cursor is read from ref in useFrame (not via React state), avoiding re-renders.
-  // Expose a reactive cursor via a throttled state update for non-R3F consumers.
-  const [cursor, setCursor] = useState<CursorState>({ x: 0, y: 0 });
-  useEffect(() => {
-    let frameId = 0;
-    const update = () => {
-      setCursor({ x: cursorRef.current.x, y: cursorRef.current.y });
-      frameId = requestAnimationFrame(update);
-    };
-    // Throttle to ~30fps for React consumers
-    const interval = setInterval(() => {
-      setCursor({ x: cursorRef.current.x, y: cursorRef.current.y });
-    }, 33);
+  const requestMotionPermission = useMemo(() => {
     return () => {
-      cancelAnimationFrame(frameId);
-      clearInterval(interval);
+      if (typeof DeviceOrientationEvent !== "undefined" &&
+          typeof (DeviceOrientationEvent as unknown as { requestPermission?: () => Promise<string> }).requestPermission === "function") {
+        (DeviceOrientationEvent as unknown as { requestPermission: () => Promise<string> }).requestPermission()
+          .then((state: string) => {
+            if (state === "granted") {
+              motionEnabledRef.current = true;
+            }
+          })
+          .catch(() => {});
+      } else if (typeof DeviceOrientationEvent !== "undefined") {
+        // Non-iOS: no permission needed
+        motionEnabledRef.current = true;
+      }
     };
   }, []);
 
   const value = useMemo(
-    () => ({ cursor, scroll, click: clickState, tier }),
-    [cursor, scroll, clickState, tier],
+    () => ({ cursor, scroll, click: clickState, tier, deviceMotion, requestMotionPermission }),
+    [cursor, scroll, clickState, tier, deviceMotion, requestMotionPermission],
   );
 
   return (

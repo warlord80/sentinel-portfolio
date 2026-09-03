@@ -1,5 +1,4 @@
 import { SectionHeading } from "@/components/ui/section-heading";
-import { Tag } from "@/components/ui/tag";
 import { Container } from "@/components/layout/container";
 import { Reveal } from "@/components/motion";
 
@@ -11,8 +10,8 @@ export function About() {
   return (
     <section id="about" className="scroll-mt-24 py-[96px] max-md:py-[64px]">
       <Container>
-        <div className="grid grid-cols-12 gap-8">
-        <div className="col-span-12 md:col-span-7">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-12">
+        <div className="sm:col-span-12 md:col-span-7">
           <Reveal>
             <SectionHeading index="01" eyebrow="Profile" title="About" />
           </Reveal>
@@ -30,7 +29,7 @@ export function About() {
             </p>
           </Reveal>
         </div>
-        <div className="col-span-12 md:col-span-4 md:col-start-9">
+        <div className="sm:col-span-12 md:col-span-4 md:col-start-9">
           <Reveal delay={0.2}>
             <dl className="flex flex-col gap-4 border-l border-line pl-6">
               <div className="flex flex-col gap-1">
@@ -52,7 +51,13 @@ export function About() {
                   Status
                 </dt>
                 <dd className="font-sans text-sm text-foreground">
-                  <Tag>Available</Tag>
+                  <span className="available-status relative inline-flex items-center gap-2">
+                    <span className="relative flex h-2 w-2">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent/60 opacity-75" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+                    </span>
+                    Available
+                  </span>
                 </dd>
               </div>
             </dl>

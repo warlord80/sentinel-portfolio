@@ -7,12 +7,14 @@ import { Certifications } from "@/components/sections/certifications";
 import { Writeups } from "@/components/sections/writeups";
 import { Contact } from "@/components/sections/contact";
 import { Footer } from "@/components/layout/footer";
+import { Ticker } from "@/components/ui/ticker";
 
 export default function Home() {
   return (
     <>
       <Hero />
       <About />
+      <Ticker />
       <Skills />
       <Projects />
       <Experience />

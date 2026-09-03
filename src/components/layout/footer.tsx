@@ -1,32 +1,61 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Container } from "@/components/layout/container";
 
 /**
  * Footer — clipped massive typography at the viewport bottom with monospace
- * metadata (copyright, current local time, location).
+ * metadata (copyright, current local time with flip digits, location).
  */
 function formatTime(date: Date) {
   return new Intl.DateTimeFormat("en-GB", {
     timeZone: "Africa/Lagos",
     hour: "2-digit",
     minute: "2-digit",
+    second: "2-digit",
     hour12: false,
   }).format(date);
 }
 
-export function Footer() {
-  const [time, setTime] = useState<string>("");
+/** Single digit with flip animation on change */
+function FlipDigit({ char }: { char: string }) {
+  const prevRef = useRef(char);
+  const [flipping, setFlipping] = useState(false);
 
-  // A timezone clock is an external system that must initialize after mount
-  // to stay hydration-safe. The blanket concern about cascading app-state
-  // renders does not apply to this idempotent time string, so the rule is
-  // suppressed for this specific statement only.
+  useEffect(() => {
+    if (prevRef.current !== char) {
+      setFlipping(true);
+      const t = setTimeout(() => setFlipping(false), 300);
+      prevRef.current = char;
+      return () => clearTimeout(t);
+    }
+  }, [char]);
+
+  if (char === ":") {
+    return <span className="inline-block w-[0.3em] text-center text-accent/50">:</span>;
+  }
+
+  return (
+    <span className="flip-digit relative inline-block overflow-hidden" aria-hidden="true">
+      <span
+        className={
+          "inline-block transition-transform duration-300 ease-out" +
+          (flipping ? " -translate-y-full opacity-0" : " translate-y-0 opacity-100")
+        }
+      >
+        {char}
+      </span>
+    </span>
+  );
+}
+
+export function Footer() {
+  const [time, setTime] = useState("");
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setTime(formatTime(new Date()));
-    const id = setInterval(() => setTime(formatTime(new Date())), 60_000);
+    const id = setInterval(() => setTime(formatTime(new Date())), 1000);
     return () => clearInterval(id);
   }, []);
 
@@ -47,7 +76,18 @@ export function Footer() {
 
         <div className="mt-6 flex flex-wrap justify-between gap-4 font-mono text-xs uppercase tracking-[0.14em] text-muted">
           <span>Cluster / Lagos, NG</span>
-          <span>{time ? `${time} WAT` : "—"}</span>
+          <span className="inline-flex items-center gap-0.5">
+            {time ? (
+              <>
+                {time.split("").map((char, i) => (
+                  <FlipDigit key={`${i}-${char}`} char={char} />
+                ))}
+                <span className="ml-1 text-accent/50">WAT</span>
+              </>
+            ) : (
+              "—"
+            )}
+          </span>
         </div>
       </Container>
     </footer>

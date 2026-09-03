@@ -1,16 +1,26 @@
+"use client";
+
+import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/container";
 import { HeroEntrance } from "@/components/motion";
 import { GlitchText } from "@/components/ui/glitch-text";
 import { ResumeButton } from "@/components/ui/resume-button";
+import { useParallax } from "@/components/motion/use-parallax";
 
 /**
  * Hero — asymmetric. The 3D Monolith occupies the mid-ground right via the
  * WebGL EnvironmentLayer (z-1, pointer-events none). This section reserves
  * layout space so the text doesn't overlap the monolith's visual position.
  * The monolith is NOT rendered here — it lives in the scene graph.
+ *
+ * Subtle scroll parallax is applied to decorative elements for depth.
  */
 export function Hero() {
+  const spacerRef = useRef<HTMLDivElement>(null);
+
+  useParallax(spacerRef, { amount: -60, speed: 0.8 });
+
   return (
     <section
       id="top"
@@ -45,8 +55,10 @@ export function Hero() {
 
         {/* Monolith layout spacer — reserves column space so the text
             doesn't overlap the WebGL monolith rendered in EnvironmentLayer.
-            Invisible; the 3D monolith renders behind at z-[-1]. */}
+            Invisible; the 3D monolith renders behind at z-[-1].
+            Has subtle scroll parallax for depth. */}
         <div
+          ref={spacerRef}
           className="relative hidden md:col-span-4 md:block"
           aria-hidden="true"
         >

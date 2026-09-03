@@ -127,8 +127,8 @@ export function Contact() {
               <svg className="h-4 w-4 text-accent" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                 <path d="M3 8.5l3.5 3.5 6.5-7" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <p className="font-sans text-sm text-accent">
-                Message sent successfully.
+              <p className="font-mono text-xs uppercase tracking-[0.15em] text-accent">
+                Message Transmitted
               </p>
             </div>
           )}

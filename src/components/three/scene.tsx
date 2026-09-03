@@ -1,8 +1,7 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useMemo, type ReactNode } from "react";
-import * as THREE from "three";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { Monolith } from "./monolith";
 import { Particles } from "./particles";
@@ -13,8 +12,31 @@ interface SceneProps {
 }
 
 /**
+ * Invalidate trigger — calls invalidate() on cursor/scroll changes so the
+ * scene only renders when something actually changed (frameloop="demand").
+ */
+function InvalidationBridge() {
+  const { invalidate } = useThree();
+
+  // Subscribe to window events and invalidate the render loop
+  useMemo(() => {
+    const onMove = () => invalidate();
+    window.addEventListener("mousemove", onMove, { passive: true });
+    window.addEventListener("scroll", onMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("scroll", onMove);
+    };
+  }, [invalidate]);
+
+  return null;
+}
+
+/**
  * Three.js scene — rendered at z-index -1 with pointer-events: none.
  * Houses the Monolith, lighting, fog, bloom, particles, and cursor-driven effects.
+ *
+ * Uses frameloop="demand" to avoid rendering when nothing changes.
  */
 export function Scene({ children }: SceneProps) {
   const tier: Tier = detectTier();
@@ -29,6 +51,12 @@ export function Scene({ children }: SceneProps) {
     [],
   );
 
+  // Cap DPR to 1.5 max to avoid 4K performance issues
+  const dpr = useMemo(() => {
+    const raw = tier === "high" ? [1, 2] : tier === "medium" ? [1, 1.5] : [0.75, 1];
+    return [raw[0], Math.min(raw[1], 1.5)] as [number, number];
+  }, [tier]);
+
   return (
     <div
       className="pointer-events-none fixed inset-0 z-[-1]"
@@ -40,15 +68,14 @@ export function Scene({ children }: SceneProps) {
           antialias: tier !== "low",
           alpha: true,
           powerPreference: tier === "low" ? "low-power" : "high-performance",
-          outputColorSpace: THREE.SRGBColorSpace,
-          toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 0.9,
         }}
         camera={cameraConfig}
-        dpr={tier === "high" ? [1, 2] : tier === "medium" ? [1, 1.5] : [0.75, 1]}
-        frameloop="always"
+        dpr={dpr}
+        frameloop="demand"
         style={{ background: "transparent" }}
       >
+        <InvalidationBridge />
+
         {/* Volumetric fog — deep, atmospheric */}
         <fog attach="fog" args={["#0f1014", 5, 22]} />
 
@@ -62,13 +89,6 @@ export function Scene({ children }: SceneProps) {
           color="#eae9e4"
         />
 
-        {/* Fill light — faint brass warmth from the left */}
-        <directionalLight
-          position={[-3, 2, -1]}
-          intensity={0.15}
-          color="#c5a059"
-        />
-
         {/* Back rim — silhouette edge glow */}
         <pointLight
           position={[0, 3, -4]}
@@ -80,16 +100,16 @@ export function Scene({ children }: SceneProps) {
 
         <Suspense fallback={null}>
           <Monolith tier={tier} />
-          {tier !== "low" && <Particles count={tier === "high" ? 180 : 90} />}
+          {tier === "high" && <Particles count={120} />}
         </Suspense>
 
-        {/* Postprocessing — bloom makes brass accents glow */}
-        {tier !== "low" && (
+        {/* Postprocessing — bloom only on high tier (expensive) */}
+        {tier === "high" && (
           <EffectComposer>
             <Bloom
               luminanceThreshold={0.35}
-              luminanceSmoothing={0.9}
-              intensity={0.6}
+              luminanceSmoothing={0.6}
+              intensity={0.5}
               mipmapBlur
             />
           </EffectComposer>

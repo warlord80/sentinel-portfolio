@@ -34,7 +34,7 @@ export function Experience() {
         <SectionHeading index="04" eyebrow="Career" title="Experience" />
       </Reveal>
 
-      <div className="mt-16 border-l border-line pl-8 md:ml-8">
+      <div className="mt-16 border-l border-line pl-4 sm:pl-8 md:ml-8">
         {timeline.map((role, i) => (
           <Reveal key={i} delay={i * 0.15}>
             <article
@@ -42,20 +42,20 @@ export function Experience() {
             >
               {/* Timeline node */}
               <span
-                className="absolute -left-[33px] top-1.5 h-2 w-2 rounded-full bg-accent"
+                className="absolute -left-[33px] top-1.5 hidden h-2 w-2 rounded-full bg-accent sm:block"
                 aria-hidden="true"
               />
               <div className="flex flex-col gap-3">
                 <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
                   {role.period}
                 </p>
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <h3 className="font-display text-2xl font-medium tracking-tight text-foreground">
+                <div className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between sm:gap-2">
+                  <h3 className="font-display text-xl font-medium tracking-tight text-foreground sm:text-2xl">
                     {role.role}
                   </h3>
                   <Tag>{role.company}</Tag>
                 </div>
-                <ul className="mt-2 flex max-w-xl flex-col gap-2">
+                <ul className="mt-2 flex flex-col gap-2">
                   {role.notes.map((note, j) => (
                     <li
                       key={j}

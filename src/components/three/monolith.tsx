@@ -39,7 +39,7 @@ export function Monolith({ tier }: MonolithProps) {
   const groupRef = useRef<THREE.Group>(null);
   const lightRef = useRef<THREE.PointLight>(null);
   const pulseRef = useRef<THREE.Mesh>(null);
-  const { cursor, scroll } = useThreeContext();
+  const { cursor, scroll, deviceMotion } = useThreeContext();
   // Read click from a ref pattern to avoid React render timing issues
   const clickRef = useRef(false);
   const prevClickState = useRef(false);
@@ -53,6 +53,8 @@ export function Monolith({ tier }: MonolithProps) {
     pulseScale: 0,
     pulseOpacity: 0,
     proximityPulse: 0,
+    deviceTiltX: 0,
+    deviceTiltY: 0,
   });
 
   // Cache viewport width, update on resize
@@ -113,8 +115,15 @@ export function Monolith({ tier }: MonolithProps) {
     const targetTiltY = s.cursorX * 0.05;
     s.tiltX += (targetTiltX - s.tiltX) * 1.5 * delta;
     s.tiltY += (targetTiltY - s.tiltY) * 1.5 * delta;
-    group.rotation.x = s.tiltX;
-    group.rotation.y += s.tiltY;
+
+    // ── Device motion tilt (subtle depth) ─────────────────────────
+    if (deviceMotion.enabled) {
+      s.deviceTiltX += (deviceMotion.tiltX * 0.15 - s.deviceTiltX) * 1.2 * delta;
+      s.deviceTiltY += (deviceMotion.tiltY * 0.1 - s.deviceTiltY) * 1.2 * delta;
+    }
+
+    group.rotation.x = s.tiltX + s.deviceTiltX;
+    group.rotation.y += s.tiltY + s.deviceTiltY;
 
     // ── Floating ───────────────────────────────────────────────────
     const floatX = Math.sin(t * 0.4) * 0.04 + Math.sin(t * 0.7) * 0.02;
