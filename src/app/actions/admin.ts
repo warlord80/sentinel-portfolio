@@ -18,6 +18,31 @@ async function requireAuth() {
 
 // ── Projects ─────────────────────────────────────────────────────
 
+export async function uploadProjectImage(file: File) {
+  const auth = await requireAuth();
+  if (auth.error) return { error: auth.error, url: null as string | null };
+
+  const ext = file.name.split(".").pop() ?? "jpg";
+  const path = `projects/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+
+  const { error } = await auth.supabase!.storage.from("project-images").upload(path, file, {
+    contentType: file.type,
+    upsert: false,
+  });
+  if (error) return { error: error.message, url: null as string | null };
+
+  const { data } = auth.supabase!.storage.from("project-images").getPublicUrl(path);
+  return { error: null, url: data.publicUrl };
+}
+
+export async function deleteProjectImage(path: string) {
+  const auth = await requireAuth();
+  if (auth.error) return { error: auth.error };
+  const { error } = await auth.supabase!.storage.from("project-images").remove([path]);
+  if (error) return { error: error.message };
+  return { error: null };
+}
+
 export async function createProject(data: Omit<Project, "id" | "created_at" | "updated_at">) {
   const auth = await requireAuth();
   if (auth.error) return { error: auth.error };

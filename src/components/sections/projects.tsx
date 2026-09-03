@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Tag } from "@/components/ui/tag";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ const projects = [
     tech: ["Splunk", "Sysmon", "Windows"],
     status: "Draft",
     description: "Placeholder — detection engineering and investigation practice environment.",
+    image: "",
   },
   {
     number: "02",
@@ -22,6 +24,7 @@ const projects = [
     tech: ["Wireshark", "tcpdump"],
     status: "Draft",
     description: "Placeholder — protocol and packet-level analysis workflow.",
+    image: "",
   },
   {
     number: "03",
@@ -30,6 +33,7 @@ const projects = [
     tech: ["Azure", "IAM"],
     status: "Draft",
     description: "Placeholder — identity and access configuration review.",
+    image: "",
   },
 ];
 
@@ -53,38 +57,51 @@ export function Projects() {
           <Reveal key={project.number} delay={i * 0.1}>
             <article
               className={
-                "group flex flex-col justify-between rounded-md border border-line bg-surface/40 p-6 sm:p-8 transition-colors duration-200 hover:border-accent/50 " +
+                "group flex flex-col justify-between rounded-md border border-line bg-surface/40 transition-colors duration-200 hover:border-accent/50 " +
                 (i % 2 === 1 ? "md:mt-16" : "")
               }
             >
-              <div className="flex items-start justify-between">
-                <span className="font-mono text-sm tracking-tight text-accent">
-                  {project.number}
-                </span>
-                <Tag>{project.status}</Tag>
-              </div>
-
-              <div className="mt-8 flex flex-col gap-3 sm:mt-12 sm:gap-4">
-                <h3 className="font-display text-[clamp(1.375rem,2.5vw,2.25rem)] font-medium leading-tight tracking-[-0.01em] text-foreground">
-                  {project.title}
-                </h3>
-                <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted">
-                  {project.category}
-                </p>
-                <p className="max-w-md text-sm leading-relaxed text-foreground/70">
-                  {project.description}
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {project.tech.map((t) => (
-                    <Tag key={t}>{t}</Tag>
-                  ))}
+              {project.image && (
+                <div className="overflow-hidden border-b border-line">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    width={800}
+                    height={224}
+                    className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105 sm:h-56"
+                  />
                 </div>
-              </div>
+              )}
+              <div className="p-6 sm:p-8">
+                <div className="flex items-start justify-between">
+                  <span className="font-mono text-sm tracking-tight text-accent">
+                    {project.number}
+                  </span>
+                  <Tag>{project.status}</Tag>
+                </div>
 
-              <div className="mt-6 sm:mt-8">
-                <Button href="#contact" variant="ghost" size="sm">
-                  Explore Case Study
-                </Button>
+                <div className="mt-8 flex flex-col gap-3">
+                  <h3 className="font-display text-[clamp(1.375rem,2.5vw,2.25rem)] font-medium leading-tight tracking-[-0.01em] text-foreground">
+                    {project.title}
+                  </h3>
+                  <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted">
+                    {project.category}
+                  </p>
+                  <p className="max-w-md text-sm leading-relaxed text-foreground/70">
+                    {project.description}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {project.tech.map((t) => (
+                      <Tag key={t}>{t}</Tag>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <Button href="#contact" variant="ghost" size="sm">
+                    Explore Case Study
+                  </Button>
+                </div>
               </div>
             </article>
           </Reveal>

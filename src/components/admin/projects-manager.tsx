@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { createProject, updateProject, deleteProject } from "@/app/actions/admin";
+import { useState, useRef } from "react";
+import Image from "next/image";
+import { createProject, updateProject, deleteProject, uploadProjectImage } from "@/app/actions/admin";
 import type { Project } from "@/lib/types";
 
 interface ProjectsPageProps {
@@ -22,6 +23,7 @@ export function ProjectsManager({ projects: initial }: ProjectsPageProps) {
     status: "Draft",
     description: "",
     slug: "",
+    image: "",
     order: projects.length,
   };
 
@@ -79,9 +81,14 @@ export function ProjectsManager({ projects: initial }: ProjectsPageProps) {
             key={p.id}
             className="flex items-center justify-between rounded-sm border border-line bg-surface/50 px-4 py-3 transition-colors hover:border-accent/50"
           >
-            <div className="min-w-0 flex-1">
-              <p className="truncate font-sans text-sm text-foreground">{p.title}</p>
-              <p className="font-mono text-xs text-muted">{p.category} · {p.status}</p>
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              {p.image && (
+                <Image src={p.image} alt="" width={40} height={40} className="h-10 w-10 rounded-sm object-cover" />
+              )}
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-sans text-sm text-foreground">{p.title}</p>
+                <p className="font-mono text-xs text-muted">{p.category} · {p.status}</p>
+              </div>
             </div>
             <div className="flex gap-2">
               <button onClick={() => { setEditing(p); setShowNew(false); }} className="rounded-sm border border-line px-4 py-2 font-mono text-xs text-muted hover:border-accent hover:text-accent">Edit</button>
@@ -104,9 +111,21 @@ function ProjectForm({
   onCancel: () => void;
 }) {
   const [form, setForm] = useState(initial);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const set = (key: string, value: string | number | string[]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const { error, url } = await uploadProjectImage(file);
+    setUploading(false);
+    if (error) { alert(error); return; }
+    set("image", url ?? "");
   };
 
   return (
@@ -120,6 +139,41 @@ function ProjectForm({
         <Field label="Order" value={String(form.order)} onChange={(v) => set("order", Number(v))} />
         <Field label="Tech (comma-sep)" value={form.tech.join(", ")} onChange={(v) => set("tech", v.split(",").map((s) => s.trim()).filter(Boolean))} />
       </div>
+
+      {/* Image upload */}
+      <div className="flex flex-col gap-2">
+        <label className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">Hero Image</label>
+        <div className="flex items-center gap-4">
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/avif"
+            onChange={handleImageUpload}
+            className="hidden"
+          />
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            className="rounded-sm border border-line bg-background px-4 py-2 font-mono text-xs text-muted transition-colors hover:border-accent hover:text-accent disabled:opacity-50"
+          >
+            {uploading ? "Uploading..." : form.image ? "Replace Image" : "Upload Image"}
+          </button>
+          {form.image && (
+            <div className="flex items-center gap-2">
+              <Image src={form.image} alt="Preview" width={48} height={48} className="h-12 w-12 rounded-sm object-cover" />
+              <button
+                type="button"
+                onClick={() => set("image", "")}
+                className="font-mono text-xs text-red-400 hover:text-red-300"
+              >
+                Remove
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
       <Field label="Description" value={form.description} onChange={(v) => set("description", v)} multiline />
       <div className="flex gap-3">
         <button onClick={() => onSave(form)} className="rounded-sm border border-accent bg-accent/10 px-4 py-2 font-mono text-xs uppercase tracking-wider text-accent hover:bg-accent/20">Save</button>

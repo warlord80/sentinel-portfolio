@@ -20,6 +20,13 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 365,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "kcopohjybjosywgunkgn.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
