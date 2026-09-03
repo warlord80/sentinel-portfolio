@@ -1,0 +1,329 @@
+@import "tailwindcss";
+
+/*
+  THE SENTINEL ARCHITECTURE — Design Tokens
+  ---------------------------------------------------------------
+  Layered so the visual identity can be re-themed without touching
+  components. Colors, spacing, typography, radii, borders and motion
+  durations/easings are all centralized here (PRD §52).
+*/
+:root {
+  /* Color */
+  --c-bg: #0f1014;
+  --c-surface: #16181d;
+  --c-text: #eae9e4;
+  --c-text-secondary: #8c8f99;
+  --c-accent: #c5a059;
+  --c-border: rgba(234, 233, 228, 0.1);
+  --c-border-focus: #2a2d35;
+
+  /* Spacing scale (8pt) */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 48px;
+  --space-6: 64px;
+  --space-7: 96px;
+  --space-8: 160px;
+
+  /* Typography --- Primary (display) */
+  --font-display: "Space Grotesk", "Monument Extended", "Clash Display",
+    system-ui, sans-serif;
+  /* Typography --- Secondary (body) */
+  --font-sans: "Inter", "Neue Montreal", system-ui, -apple-system, sans-serif;
+  /* Typography --- Tertiary (code / metadata) */
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* Radii (soft brutalism: sharp, but 2-4px to remove harshness) */
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+
+  /* Borders */
+  --border-hair: 1px solid var(--c-border);
+
+  /* Motion */
+  --dur-fast: 150ms;
+  --dur-med: 300ms;
+  --dur-slow: 600ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Layout */
+  --max-w: 1200px;
+  --max-w-prose: 74ch;
+
+  /* Radii mapped into Tailwind theme */
+  --radius-card: var(--radius-md);
+}
+
+@theme inline {
+  --color-background: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-foreground: var(--c-text);
+  --color-muted: var(--c-text-secondary);
+  --color-accent: var(--c-accent);
+  --color-line: var(--c-border);
+  --color-line-strong: var(--c-border-focus);
+
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --spacing-1: var(--space-1);
+  --spacing-2: var(--space-2);
+  --spacing-3: var(--space-3);
+  --spacing-4: var(--space-4);
+  --spacing-5: var(--space-5);
+  --spacing-6: var(--space-6);
+  --spacing-7: var(--space-7);
+  --spacing-8: var(--space-8);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+
+  --ease-out: var(--ease-out);
+  --ease-in-out: var(--ease-in-out);
+}
+
+/* Base reset & foundations */
+* {
+  border-color: var(--c-border);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Disable JS-driven smooth scroll when user prefers reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background-color: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: var(--c-accent);
+  color: var(--c-bg);
+}
+
+/* Visible, accessible focus ring (PRD §44) */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Utility: prose-ish max width for long-form text */
+@utility prose-max {
+  max-width: var(--max-w-prose);
+}
+
+/* Motion foundations — reveal states for GSAP-driven animations */
+[data-reveal] {
+  will-change: opacity, transform;
+}
+
+/* Lenis overrides — prevent layout shift during smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Scroll-triggered line accent animation */
+@keyframes line-expand {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.animate-line-expand {
+  animation: line-expand 0.6s var(--ease-out) forwards;
+  transform-origin: left;
+}
+
+/* ── Resume Button ──────────────────────────────────────────────── */
+
+/* Scan line — sweeps left to right periodically */
+@keyframes scan-line {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* Border trace — brass light traces the border */
+@keyframes border-trace {
+  0% {
+    background: linear-gradient(90deg, transparent 0%, transparent 100%);
+  }
+  25% {
+    background: linear-gradient(90deg, var(--c-accent) 0%, transparent 30%);
+  }
+  50% {
+    background: linear-gradient(90deg, transparent 70%, var(--c-accent) 100%);
+  }
+  75% {
+    background: linear-gradient(90deg, transparent 0%, var(--c-accent) 50%);
+  }
+  100% {
+    background: linear-gradient(90deg, transparent 0%, transparent 100%);
+  }
+}
+
+/* Click flash */
+@keyframes resume-flash {
+  0% {
+    background-color: rgba(197, 160, 89, 0);
+    box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4);
+  }
+  30% {
+    background-color: rgba(197, 160, 89, 0.15);
+    box-shadow: 0 0 30px 4px rgba(197, 160, 89, 0.5);
+  }
+  100% {
+    background-color: rgba(197, 160, 89, 0);
+    box-shadow: 0 0 0 0 rgba(197, 160, 89, 0);
+  }
+}
+
+.resume-scan-line > span {
+  animation: scan-line 4s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.resume-border-trace {
+  animation: border-trace 4s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.resume-btn-flash {
+  animation: resume-flash 0.7s ease-out forwards !important;
+}
+
+/* ── Polish & Micro-interactions ────────────────────────────────── */
+
+/* Button press effect */
+@keyframes btn-press {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
+button:active:not(:disabled),
+a:active {
+  animation: btn-press 0.15s ease-out;
+}
+
+/* Input focus glow */
+input:focus,
+textarea:focus,
+select:focus {
+  box-shadow: 0 0 0 1px var(--c-accent), 0 0 12px rgba(197, 160, 89, 0.1);
+}
+
+/* Card hover lift */
+.hover-lift {
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Gradient text shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--c-text) 0%,
+    var(--c-accent) 50%,
+    var(--c-text) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Subtle pulse for attention */
+@keyframes subtle-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Page transition fade */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-enter {
+  animation: page-in 0.4s var(--ease-out) forwards;
+}
+
+/* Spinner for loading states */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--c-border);
+  border-top-color: var(--c-accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* Skeleton loading */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.15; }
+}
+
+.skeleton {
+  background: var(--c-surface);
+  border-radius: var(--radius-sm);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+/* ── Reduced Motion ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .spinner,
+  .resume-scan-line > span,
+  .resume-border-trace,
+  .resume-btn-flash,
+  .hover-lift:hover,
+  .text-shimmer {
+    animation: none !important;
+  }
+}
