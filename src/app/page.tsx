@@ -11,10 +11,17 @@ import { Ticker } from "@/components/ui/ticker";
 import { getEnabledSocialLinks, getResumeUrl } from "@/app/actions/admin";
 
 export default async function Home() {
-  const [socialLinks, resumeUrl] = await Promise.all([
-    getEnabledSocialLinks(),
-    getResumeUrl(),
-  ]);
+  let socialLinks: Awaited<ReturnType<typeof getEnabledSocialLinks>> = [];
+  let resumeUrl = "";
+
+  try {
+    [socialLinks, resumeUrl] = await Promise.all([
+      getEnabledSocialLinks(),
+      getResumeUrl(),
+    ]);
+  } catch {
+    // Gracefully fall back to defaults if Supabase queries fail
+  }
 
   return (
     <>

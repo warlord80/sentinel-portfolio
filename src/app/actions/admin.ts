@@ -266,14 +266,18 @@ export async function getSocialLinks() {
 }
 
 export async function getEnabledSocialLinks() {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("social_links")
-    .select("*")
-    .eq("enabled", true)
-    .order("order_index", { ascending: true });
-  if (error) return [];
-  return data ?? [];
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("social_links")
+      .select("*")
+      .eq("enabled", true)
+      .order("order_index", { ascending: true });
+    if (error) return [];
+    return data ?? [];
+  } catch {
+    return [];
+  }
 }
 
 export async function createSocialLink(data: Omit<import("@/lib/types").SocialLink, "id" | "created_at" | "updated_at">) {
@@ -319,9 +323,13 @@ export async function uploadResume(file: File) {
 }
 
 export async function getResumeUrl() {
-  const supabase = await createClient();
-  const { data } = await supabase.from("site_settings").select("resume_url").limit(1).single();
-  return data?.resume_url ?? "";
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.from("site_settings").select("resume_url").limit(1).single();
+    return data?.resume_url ?? "";
+  } catch {
+    return "";
+  }
 }
 
 export async function setResumeUrl(url: string) {
