@@ -280,7 +280,10 @@ select:focus {
   .text-shimmer,
   .ticker-scroll,
   .flip-digit span,
-  .resume-glow {
+  .resume-glow,
+  .preloader-radar-1,
+  .preloader-radar-2,
+  .preloader-radar-3 {
     animation: none !important;
   }
   .flip-digit span {
@@ -319,4 +322,26 @@ select:focus {
 @keyframes subtle-fade-out {
   from { opacity: 1; transform: translateY(0); }
   to { opacity: 0.4; transform: translateY(-8px); }
+}
+
+/* ── Preloader Radar Pulse ─────────────────────────────────────── */
+@keyframes radar-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}
+
+.preloader-radar-1 {
+  animation: radar-pulse 2.4s ease-out infinite;
+}
+.preloader-radar-2 {
+  animation: radar-pulse 2.4s ease-out infinite 0.8s;
+}
+.preloader-radar-3 {
+  animation: radar-pulse 2.4s ease-out infinite 1.6s;
 }
