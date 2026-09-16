@@ -42,14 +42,28 @@ export function GlitchText() {
     isAnimating.current = true;
 
     const container = containerRef.current;
+    const nextIndex = (currentIndex.current + 1) % ROLES.length;
+    const nextText = ROLES[nextIndex];
+    const nextChars = nextText.split("");
+
+    // Rebuild DOM to match new text length
+    container.innerHTML = "";
+    nextChars.forEach((ch) => {
+      const span = document.createElement("span");
+      span.setAttribute("data-char", "");
+      span.textContent = ch === " " ? "\u00A0" : ch;
+      span.style.display = "inline-block";
+      span.style.willChange = "transform, opacity";
+      container.appendChild(span);
+    });
+
     const chars = container.querySelectorAll<HTMLElement>("[data-char]");
     if (chars.length === 0) {
       isAnimating.current = false;
+      currentIndex.current = nextIndex;
       return;
     }
 
-    const nextIndex = (currentIndex.current + 1) % ROLES.length;
-    const nextText = ROLES[nextIndex];
     const tl = gsap.timeline({
       onComplete: () => {
         currentIndex.current = nextIndex;
@@ -117,13 +131,12 @@ export function GlitchText() {
 
     // ── Phase 4: Rebuild — assemble from data streams ──────────────
     const rebuildStart = scatterStart + scatterDur + 0.1;
+    const dataChars = "01█▓░";
 
     chars.forEach((char, i) => {
-      if (i < nextText.length) {
-        char.textContent = nextText[i] === " " ? "\u00A0" : nextText[i];
-      } else {
-        char.textContent = "";
-      }
+      const cd = rebuildStart + (i / chars.length) * rebuildDur * 0.3;
+      const preReveal = getRandomInt(2, 3);
+
       gsap.set(char, {
         x: (Math.random() - 0.5) * 160,
         y: (Math.random() - 0.5) * 100 - 30,
@@ -132,16 +145,6 @@ export function GlitchText() {
         opacity: 0,
         color: "#4a9eff",
       });
-    });
-
-    const finalChars = container.querySelectorAll<HTMLElement>("[data-char]");
-    const dataChars = "01█▓░";
-
-    finalChars.forEach((char, i) => {
-      if (i >= nextText.length) return;
-
-      const cd = rebuildStart + (i / nextText.length) * rebuildDur * 0.3;
-      const preReveal = getRandomInt(2, 3);
 
       tl.to(char, { opacity: 1, duration: 0.04 }, cd);
 
@@ -154,7 +157,7 @@ export function GlitchText() {
       }
 
       tl.call(
-        () => { char.textContent = nextText[i] === " " ? "\u00A0" : nextText[i]; },
+        () => { char.textContent = nextChars[i] === " " ? "\u00A0" : nextChars[i]; },
         undefined,
         cd + preReveal * 0.03,
       );
