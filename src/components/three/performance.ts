@@ -1,14 +1,9 @@
 
-
 let cachedTier: Tier | null = null;
 
 /**
  * Performance tiers — detect device capability and return a quality level
- * that controls geometry complexity, post-processing, and animation frame
- * budget. The monolith's LOD and effects scale with this.
- *
- * Result is cached after first call to avoid creating WebGL contexts on
- * every render.
+ * that controls particle count and animation complexity.
  */
 export type Tier = "high" | "medium" | "low";
 
@@ -37,7 +32,6 @@ export function detectTier(): Tier {
   } else if (highPatterns.test(renderer)) {
     cachedTier = "high";
   } else {
-    // Check device memory (Chrome only)
     const nav = navigator as unknown as Record<string, unknown>;
     const mem = nav.deviceMemory;
     if (typeof mem === "number" && mem < 4) {
@@ -47,26 +41,8 @@ export function detectTier(): Tier {
     }
   }
 
-  // Clean up the temporary WebGL context
   const loseCtx = gl.getExtension("WEBGL_lose_context");
   loseCtx?.loseContext();
 
   return cachedTier;
-}
-
-/** Monolith extrude detail level per tier */
-export function monolithDetail(tier: Tier): number {
-  switch (tier) {
-    case "high":
-      return 6;
-    case "medium":
-      return 4;
-    case "low":
-      return 2;
-  }
-}
-
-/** Whether to enable post-processing (bloom, vignette) */
-export function postProcessingEnabled(tier: Tier): boolean {
-  return tier !== "low";
 }

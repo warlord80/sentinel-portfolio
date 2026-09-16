@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { headers } from "next/headers";
-import type { Project, Experience, Certification, Writeup, SiteSettings, SocialLink } from "@/lib/types";
+import type { Project, Experience, Certification, Writeup, SiteSettings } from "@/lib/types";
 
 /**
  * Verify the current user is authenticated. Returns the authenticated user

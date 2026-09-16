@@ -2,23 +2,20 @@
 
 import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useMemo, type ReactNode } from "react";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
-import { Monolith } from "./monolith";
 import { Particles } from "./particles";
-import { detectTier, type Tier } from "./performance";
+import { detectTier } from "./performance";
 
 interface SceneProps {
   children?: ReactNode;
 }
 
 /**
- * Invalidate trigger — calls invalidate() on cursor/scroll changes so the
+ * Invalidate trigger — calls invalidate() on mouse/scroll changes so the
  * scene only renders when something actually changed (frameloop="demand").
  */
 function InvalidationBridge() {
   const { invalidate } = useThree();
 
-  // Subscribe to window events and invalidate the render loop
   useMemo(() => {
     const onMove = () => invalidate();
     window.addEventListener("mousemove", onMove, { passive: true });
@@ -34,28 +31,27 @@ function InvalidationBridge() {
 
 /**
  * Three.js scene — rendered at z-index -1 with pointer-events: none.
- * Houses the Monolith, lighting, fog, bloom, particles, and cursor-driven effects.
- *
- * Uses frameloop="demand" to avoid rendering when nothing changes.
+ * Lightweight floating dust particles only. No heavy 3D objects.
  */
 export function Scene({ children }: SceneProps) {
-  const tier: Tier = detectTier();
+  const tier = detectTier();
 
   const cameraConfig = useMemo(
     () => ({
-      fov: 35,
+      fov: 50,
       near: 0.1,
-      far: 100,
-      position: [0, 1.5, 5] as [number, number, number],
+      far: 50,
+      position: [0, 0, 8] as [number, number, number],
     }),
     [],
   );
 
-  // Cap DPR to 1.5 max to avoid 4K performance issues
   const dpr = useMemo(() => {
-    const raw = tier === "high" ? [1, 2] : tier === "medium" ? [1, 1.5] : [0.75, 1];
+    const raw = tier === "high" ? [1, 1.5] : tier === "medium" ? [0.75, 1.25] : [0.5, 1];
     return [raw[0], Math.min(raw[1], 1.5)] as [number, number];
   }, [tier]);
+
+  const particleCount = tier === "high" ? 100 : tier === "medium" ? 60 : 30;
 
   return (
     <div
@@ -65,9 +61,9 @@ export function Scene({ children }: SceneProps) {
     >
       <Canvas
         gl={{
-          antialias: tier !== "low",
+          antialias: false,
           alpha: true,
-          powerPreference: tier === "low" ? "low-power" : "high-performance",
+          powerPreference: "low-power",
         }}
         camera={cameraConfig}
         dpr={dpr}
@@ -76,44 +72,9 @@ export function Scene({ children }: SceneProps) {
       >
         <InvalidationBridge />
 
-        {/* Volumetric fog — deep, atmospheric */}
-        <fog attach="fog" args={["#0f1014", 5, 22]} />
-
-        {/* Ambient — enough to see form */}
-        <ambientLight intensity={0.15} color="#eae9e4" />
-
-        {/* Key light — directional from upper right */}
-        <directionalLight
-          position={[3, 5, 4]}
-          intensity={0.6}
-          color="#eae9e4"
-        />
-
-        {/* Back rim — silhouette edge glow */}
-        <pointLight
-          position={[0, 3, -4]}
-          intensity={0.4}
-          color="#c5a059"
-          distance={12}
-          decay={2}
-        />
-
         <Suspense fallback={null}>
-          <Monolith tier={tier} />
-          {tier === "high" && <Particles count={120} />}
+          <Particles count={particleCount} />
         </Suspense>
-
-        {/* Postprocessing — bloom only on high tier (expensive) */}
-        {tier === "high" && (
-          <EffectComposer>
-            <Bloom
-              luminanceThreshold={0.35}
-              luminanceSmoothing={0.6}
-              intensity={0.5}
-              mipmapBlur
-            />
-          </EffectComposer>
-        )}
 
         {children}
       </Canvas>
