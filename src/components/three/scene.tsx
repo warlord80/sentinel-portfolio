@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { Suspense, useMemo, type ReactNode } from "react";
 import { Particles } from "./particles";
 import { detectTier } from "./performance";
@@ -10,28 +10,8 @@ interface SceneProps {
 }
 
 /**
- * Invalidate trigger — calls invalidate() on mouse/scroll changes so the
- * scene only renders when something actually changed (frameloop="demand").
- */
-function InvalidationBridge() {
-  const { invalidate } = useThree();
-
-  useMemo(() => {
-    const onMove = () => invalidate();
-    window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("scroll", onMove, { passive: true });
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("scroll", onMove);
-    };
-  }, [invalidate]);
-
-  return null;
-}
-
-/**
  * Three.js scene — rendered at z-index -1 with pointer-events: none.
- * Lightweight floating dust particles only. No heavy 3D objects.
+ * Lightweight floating dust particles. Continuous animation.
  */
 export function Scene({ children }: SceneProps) {
   const tier = detectTier();
@@ -67,11 +47,8 @@ export function Scene({ children }: SceneProps) {
         }}
         camera={cameraConfig}
         dpr={dpr}
-        frameloop="demand"
         style={{ background: "transparent" }}
       >
-        <InvalidationBridge />
-
         <Suspense fallback={null}>
           <Particles count={particleCount} />
         </Suspense>

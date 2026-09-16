@@ -163,61 +163,18 @@ html.lenis body {
   transform-origin: left;
 }
 
-/* ── Resume Button ──────────────────────────────────────────────── */
-
-/* Scan line — sweeps left to right periodically */
-@keyframes scan-line {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(200%); }
-}
-
-/* Border trace — brass light traces the border */
-@keyframes border-trace {
-  0% {
-    background: linear-gradient(90deg, transparent 0%, transparent 100%);
-  }
-  25% {
-    background: linear-gradient(90deg, var(--c-accent) 0%, transparent 30%);
-  }
-  50% {
-    background: linear-gradient(90deg, transparent 70%, var(--c-accent) 100%);
-  }
-  75% {
-    background: linear-gradient(90deg, transparent 0%, var(--c-accent) 50%);
-  }
-  100% {
-    background: linear-gradient(90deg, transparent 0%, transparent 100%);
-  }
-}
-
-/* Click flash */
-@keyframes resume-flash {
-  0% {
-    background-color: rgba(197, 160, 89, 0);
-    box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4);
-  }
-  30% {
-    background-color: rgba(197, 160, 89, 0.15);
-    box-shadow: 0 0 30px 4px rgba(197, 160, 89, 0.5);
-  }
-  100% {
-    background-color: rgba(197, 160, 89, 0);
+/* ── Resume Button Glow ──────────────────────────────────────────── */
+@keyframes resume-glow-pulse {
+  0%, 100% {
     box-shadow: 0 0 0 0 rgba(197, 160, 89, 0);
   }
+  50% {
+    box-shadow: 0 0 16px 2px rgba(197, 160, 89, 0.15);
+  }
 }
 
-.resume-scan-line > span {
-  animation: scan-line 4s ease-in-out infinite;
-  animation-delay: 1s;
-}
-
-.resume-border-trace {
-  animation: border-trace 4s ease-in-out infinite;
-  animation-delay: 1s;
-}
-
-.resume-btn-flash {
-  animation: resume-flash 0.7s ease-out forwards !important;
+.resume-glow {
+  animation: resume-glow-pulse 3s ease-in-out infinite;
 }
 
 /* ── Polish & Micro-interactions ────────────────────────────────── */
@@ -319,13 +276,11 @@ select:focus {
     transition-duration: 0.01ms !important;
   }
   .spinner,
-  .resume-scan-line > span,
-  .resume-border-trace,
-  .resume-btn-flash,
   .hover-lift:hover,
   .text-shimmer,
   .ticker-scroll,
-  .flip-digit span {
+  .flip-digit span,
+  .resume-glow {
     animation: none !important;
   }
   .flip-digit span {

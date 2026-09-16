@@ -8,10 +8,10 @@ import { Reveal } from "@/components/motion";
  */
 export function About() {
   return (
-    <section id="about" className="scroll-mt-24 py-[96px] max-md:py-[64px]">
+    <section id="about" className="scroll-mt-24 py-[96px] max-md:py-[64px] overflow-hidden">
       <Container>
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-12">
-        <div className="sm:col-span-12 md:col-span-7">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
+        <div className="md:col-span-7">
           <Reveal>
             <SectionHeading index="01" eyebrow="Profile" title="About" />
           </Reveal>
@@ -29,7 +29,7 @@ export function About() {
             </p>
           </Reveal>
         </div>
-        <div className="sm:col-span-12 md:col-span-4 md:col-start-9">
+        <div className="md:col-span-4 md:col-start-9">
           <Reveal delay={0.2}>
             <dl className="flex flex-col gap-4 border-l border-line pl-6">
               <div className="flex flex-col gap-1">

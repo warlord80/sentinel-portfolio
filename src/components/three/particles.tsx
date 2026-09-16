@@ -21,7 +21,7 @@ function initParticles(count: number) {
     vel[i3] = (Math.random() - 0.5) * 0.001;
     vel[i3 + 1] = Math.random() * 0.002 + 0.0005;
     vel[i3 + 2] = (Math.random() - 0.5) * 0.0005;
-    sizes[i] = Math.random() * 0.015 + 0.005;
+    sizes[i] = Math.random() * 0.03 + 0.01;
   }
   return { pos, vel, sizes };
 }
