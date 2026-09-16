@@ -56,8 +56,20 @@ export function ClientShell({ children }: { children: ReactNode }) {
   // Defer scene mount until browser is idle
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const idleCallback = window.requestIdleCallback(() => setMountScene(true), { timeout: 3000 });
-    return () => window.cancelIdleCallback(idleCallback);
+
+    const mount = () => setMountScene(true);
+    let cancel: () => void;
+
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(mount, { timeout: 3000 });
+      cancel = () => window.cancelIdleCallback(id);
+    } else {
+      // Safari < 16 fallback
+      const id = setTimeout(mount, 1000);
+      cancel = () => clearTimeout(id);
+    }
+
+    return cancel;
   }, []);
 
   const showScene = caps.webgl && !caps.isMobile && mountScene;
