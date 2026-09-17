@@ -199,7 +199,7 @@ export function GlitchText({ nav }: { nav?: boolean }) {
       ref={containerRef}
       className={
         nav
-          ? "relative h-[1.2em] overflow-hidden font-mono text-[0.65rem] tracking-[0.12em] text-muted/70"
+          ? "relative h-[1.2em] w-full overflow-hidden font-mono text-[0.65rem] tracking-[0.12em] text-muted/70"
           : "relative h-[1.4em] w-full overflow-hidden font-mono text-[0.8em] tracking-[0.15em] text-muted sm:text-[0.85em]"
       }
       aria-label={ROLES[0]}

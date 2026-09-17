@@ -70,7 +70,7 @@ export function Navigation() {
         )}
       >
         <nav
-          className="mx-auto flex h-14 max-w-[var(--max-w)] items-center justify-between px-6 sm:h-16"
+          className="mx-auto flex h-14 max-w-[var(--max-w)] items-center gap-4 px-6 sm:h-16 sm:gap-6"
           aria-label="Primary"
         >
           <a
@@ -85,7 +85,7 @@ export function Navigation() {
           </a>
 
           {/* Role ticker — desktop only */}
-          <div className="hidden flex-1 justify-center pl-8 md:flex">
+          <div className="hidden min-w-0 flex-1 justify-center md:flex">
             <GlitchText nav />
           </div>
 
