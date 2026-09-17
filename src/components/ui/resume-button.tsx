@@ -13,13 +13,13 @@ export function ResumeButton({ href = "/resume.pdf", className }: { href?: strin
       download
       className={cn(
         "group relative inline-flex items-center justify-center gap-2",
-        "rounded-sm border border-accent/40 bg-surface px-5 py-2.5",
-        "font-mono text-xs font-medium uppercase tracking-[0.15em] text-accent",
-        "transition-all duration-300 ease-out",
-        "hover:border-accent hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(197,160,89,0.2)]",
-        "active:translate-y-0 active:scale-[0.98]",
+        "rounded-sm border border-line bg-transparent px-5 py-2.5",
+        "font-mono text-xs font-medium uppercase tracking-[0.15em] text-muted",
+        "transition-all duration-200 ease-out",
+        "min-h-[44px]",
+        "hover:border-accent/50 hover:text-accent hover:-translate-y-0.5",
+        "active:translate-y-0",
         "focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-3",
-        "resume-glow",
         className,
       )}
       aria-label="Download CV"

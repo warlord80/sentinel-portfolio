@@ -6,18 +6,22 @@ type Size = "sm" | "md" | "lg";
 
 const base =
   "inline-flex items-center justify-center gap-2 rounded-sm border font-sans font-medium " +
-  "transition-[border-color,color] duration-200 ease-out " +
+  "transition-all duration-200 ease-out " +
   "focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-3 " +
   "disabled:pointer-events-none disabled:opacity-50 " +
   "min-h-[44px]";
 
 const variants: Record<Variant, string> = {
-  // Solid graphite background, thin border; hover → brass border + text brighten
+  // Muted gold background, near-black text, gold glow; hover → brighten + lift
   primary:
-    "bg-surface border border-line text-foreground hover:border-accent hover:text-accent",
-  // Borderless/near-invisible, resolves on hover
+    "bg-[#B08D45] border border-[#B08D45] text-[#0f1014] font-semibold " +
+    "shadow-[0_0_12px_rgba(176,141,69,0.25)] " +
+    "hover:bg-[#c5a059] hover:border-[#c5a059] hover:-translate-y-0.5 hover:shadow-[0_0_20px_rgba(197,160,89,0.35)] " +
+    "active:translate-y-0 active:shadow-[0_0_8px_rgba(176,141,69,0.2)]",
+  // Near-black bg, thin gold-tinted border, light text; hover → gold border + tint
   secondary:
-    "bg-transparent border border-transparent text-foreground/80 hover:border-accent hover:text-accent",
+    "bg-transparent border border-line text-foreground/80 " +
+    "hover:border-accent/60 hover:text-accent hover:bg-accent/5",
   ghost:
     "bg-transparent border border-line text-foreground/70 hover:text-accent",
 };

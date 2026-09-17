@@ -64,26 +64,26 @@ export function GlitchText() {
       },
     });
 
-    const outDur = 0.3;
-    const glitchDur = 0.55;
-    const scatterDur = 0.3;
-    const rebuildDur = 0.5;
+    const outDur = 0.25;
+    const glitchDur = 0.4;
+    const scatterDur = 0.2;
+    const rebuildDur = 0.4;
 
-    // ── Phase 1: Out — lift and fade ───────────────────────────────
+    // ── Phase 1: Out — quick fade up ───────────────────────────────
     chars.forEach((char, i) => {
       tl.to(
         char,
-        { y: -22, opacity: 0, scale: 0.9, duration: outDur, ease: "power2.in" },
-        (i / chars.length) * outDur * 0.35,
+        { y: -16, opacity: 0, duration: outDur, ease: "power2.in" },
+        (i / chars.length) * outDur * 0.3,
       );
     });
 
-    // ── Phase 2: Glitch — scramble to data ─────────────────────────
-    const glitchStart = outDur + 0.06;
+    // ── Phase 2: Glitch — brief scramble ───────────────────────────
+    const glitchStart = outDur + 0.04;
 
     chars.forEach((char, i) => {
-      const d = glitchStart + (i / chars.length) * glitchDur * 0.35;
-      const reps = getRandomInt(3, 5);
+      const d = glitchStart + (i / chars.length) * glitchDur * 0.3;
+      const reps = getRandomInt(2, 3);
 
       tl.set(char, { y: 0, scale: 1 }, d);
 
@@ -94,7 +94,7 @@ export function GlitchText() {
           repeat: reps,
           onRepeat: () => { char.textContent = getRandomChar(); },
           color: () => {
-            const c = ["#c5a059", "#4a9eff", "#ff4a4a", "#00ff88", "#eae9e4"];
+            const c = ["#c5a059", "#4a9eff", "#eae9e4"];
             return c[Math.floor(Math.random() * c.length)];
           },
           onComplete: () => { char.textContent = getRandomChar(); },
@@ -103,38 +103,38 @@ export function GlitchText() {
       );
     });
 
-    // ── Phase 3: Scatter — fall away ───────────────────────────────
-    const scatterStart = glitchStart + glitchDur * 0.55;
+    // ── Phase 3: Scatter — gentle drift away (reduced intensity) ───
+    const scatterStart = glitchStart + glitchDur * 0.5;
 
     chars.forEach((char, i) => {
       tl.to(
         char,
         {
-          x: (Math.random() - 0.5) * 180,
-          y: getRandomInt(50, 150),
-          rotation: (Math.random() - 0.5) * 80,
-          scale: 0.1 + Math.random() * 0.25,
+          x: (Math.random() - 0.5) * 60,
+          y: getRandomInt(20, 50),
+          rotation: (Math.random() - 0.5) * 20,
+          scale: 0.5 + Math.random() * 0.2,
           opacity: 0,
           duration: scatterDur,
-          ease: "power3.in",
+          ease: "power2.in",
         },
-        scatterStart + (i / chars.length) * 0.07,
+        scatterStart + (i / chars.length) * 0.05,
       );
     });
 
-    // ── Phase 4: Rebuild — assemble from data streams ──────────────
-    const rebuildStart = scatterStart + scatterDur + 0.1;
-    const dataChars = "01█▓░";
+    // ── Phase 4: Rebuild — quick clean resolve ─────────────────────
+    const rebuildStart = scatterStart + scatterDur + 0.06;
+    const dataChars = "01█";
 
     chars.forEach((char, i) => {
-      const cd = rebuildStart + (i / chars.length) * rebuildDur * 0.3;
-      const preReveal = getRandomInt(2, 3);
+      const cd = rebuildStart + (i / chars.length) * rebuildDur * 0.25;
+      const preReveal = getRandomInt(1, 2);
 
       gsap.set(char, {
-        x: (Math.random() - 0.5) * 160,
-        y: (Math.random() - 0.5) * 100 - 30,
-        rotation: (Math.random() - 0.5) * 50,
-        scale: 0.3 + Math.random() * 0.3,
+        x: (Math.random() - 0.5) * 40,
+        y: (Math.random() - 0.5) * 30 - 10,
+        rotation: (Math.random() - 0.5) * 15,
+        scale: 0.5 + Math.random() * 0.2,
         opacity: 0,
         color: "#4a9eff",
       });
@@ -145,26 +145,26 @@ export function GlitchText() {
         tl.call(
           () => { char.textContent = dataChars[Math.floor(Math.random() * dataChars.length)]; },
           undefined,
-          cd + j * 0.03,
+          cd + j * 0.02,
         );
       }
 
       tl.call(
         () => { char.textContent = nextChars[i] === " " ? "\u00A0" : nextChars[i]; },
         undefined,
-        cd + preReveal * 0.03,
+        cd + preReveal * 0.02,
       );
 
       tl.to(
         char,
-        { x: 0, y: 0, rotation: 0, scale: 1, duration: rebuildDur * 0.5, ease: "back.out(1.4)" },
+        { x: 0, y: 0, rotation: 0, scale: 1, duration: rebuildDur * 0.4, ease: "back.out(1.2)" },
         cd,
       );
 
       tl.to(
         char,
-        { color: "#8c8f99", duration: 0.25, ease: "power2.out" },
-        cd + rebuildDur * 0.35,
+        { color: "#8c8f99", duration: 0.2, ease: "power2.out" },
+        cd + rebuildDur * 0.3,
       );
     });
   }, []);
