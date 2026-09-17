@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ClientShell } from "@/components/layout/client-shell";
-import { Preloader } from "@/components/ui/preloader";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-display",
@@ -51,7 +50,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://*.supabase.co" />
       </head>
       <body className="relative min-h-full flex flex-col bg-background text-foreground">
-        <Preloader />
         <ClientShell>{children}</ClientShell>
       </body>
     </html>
