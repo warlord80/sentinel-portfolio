@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { MobileNavigation } from "@/components/layout/mobile-navigation";
+import { GlitchText } from "@/components/ui/glitch-text";
 import { useLenis } from "@/components/motion";
 
 const links = [
@@ -69,7 +70,7 @@ export function Navigation() {
         )}
       >
         <nav
-          className="mx-auto flex h-16 max-w-[var(--max-w)] items-center justify-between px-6"
+          className="mx-auto flex h-14 max-w-[var(--max-w)] items-center justify-between px-6 sm:h-16"
           aria-label="Primary"
         >
           <a
@@ -78,12 +79,17 @@ export function Navigation() {
               e.preventDefault();
               scrollTo("#top");
             }}
-            className="font-display text-base font-medium tracking-tight"
+            className="font-display text-base font-medium tracking-tight shrink-0"
           >
             NWOZOR<span className="text-accent">.</span>
           </a>
 
-          <ul className="hidden items-center gap-7 md:flex">
+          {/* Role ticker — desktop only */}
+          <div className="hidden flex-1 justify-center pl-8 md:flex">
+            <GlitchText nav />
+          </div>
+
+          <ul className="hidden items-center gap-7 md:flex shrink-0">
             {links.map((link) => (
               <li key={link.href}>
                 <a

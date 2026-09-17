@@ -46,9 +46,9 @@ export function Contact({ socialLinks = [] }: { socialLinks?: SocialLink[] }) {
         </Reveal>
 
         <Reveal delay={0.2}>
-          <form action={formAction} className="mt-10 max-w-[560px] space-y-8 sm:mt-12 sm:space-y-10">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10">
-            <div className="flex flex-col gap-2">
+          <form action={formAction} className="mt-10 max-w-[560px] space-y-5 sm:mt-12 sm:space-y-8">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-8">
+            <div className="flex flex-col gap-1.5 sm:gap-2">
               <label
                 htmlFor="contact-name"
                 className="font-mono text-xs uppercase tracking-[0.18em] text-muted"
@@ -63,7 +63,7 @@ export function Contact({ socialLinks = [] }: { socialLinks?: SocialLink[] }) {
                 required
               />
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1.5 sm:gap-2">
               <label
                 htmlFor="contact-email"
                 className="font-mono text-xs uppercase tracking-[0.18em] text-muted"

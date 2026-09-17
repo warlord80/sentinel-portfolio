@@ -4,7 +4,6 @@ import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/container";
 import { HeroEntrance } from "@/components/motion";
-import { GlitchText } from "@/components/ui/glitch-text";
 import { ResumeButton } from "@/components/ui/resume-button";
 import { useParallax } from "@/components/motion/use-parallax";
 
@@ -28,7 +27,6 @@ export function Hero({ resumeUrl = "/resume.pdf" }: { resumeUrl?: string }) {
     >
       <Container className="grid grid-cols-1 items-center gap-8 pt-12 pb-8 md:grid-cols-12 md:gap-12 md:pt-16">
         <HeroEntrance className="flex flex-col items-start gap-6 md:col-span-7 md:col-start-2 md:gap-8">
-          <GlitchText />
 
           <h1 className="font-display text-[clamp(2.25rem,7vw,5.5rem)] font-medium leading-[1.0] tracking-[-0.02em] text-foreground sm:text-[clamp(2.5rem,6vw,5.5rem)]">
             Chibuike
