@@ -23,9 +23,8 @@ function getRandomInt(min: number, max: number) {
 
 /**
  * GlitchText — cybersecurity-themed role text animation.
- * Accepts `nav` prop for compact nav-bar rendering.
  */
-export function GlitchText({ nav }: { nav?: boolean }) {
+export function GlitchText() {
   const containerRef = useRef<HTMLDivElement>(null);
   const currentIndex = useRef(0);
   const isAnimating = useRef(false);
@@ -197,11 +196,7 @@ export function GlitchText({ nav }: { nav?: boolean }) {
   return (
     <div
       ref={containerRef}
-      className={
-        nav
-          ? "relative h-[1.2em] w-full overflow-hidden font-mono text-[0.65rem] tracking-[0.12em] text-muted/70"
-          : "relative h-[1.4em] w-full overflow-hidden font-mono text-[0.8em] tracking-[0.15em] text-muted sm:text-[0.85em]"
-      }
+      className="relative h-[1.4em] w-full overflow-hidden font-mono text-[0.8em] tracking-[0.15em] text-muted sm:text-[0.85em]"
       aria-label={ROLES[0]}
       aria-hidden="true"
     />
