@@ -26,8 +26,8 @@ export function Hero({ resumeUrl = "/resume.pdf" }: { resumeUrl?: string }) {
       id="top"
       className="relative flex min-h-[85svh] items-center overflow-hidden max-md:min-h-[80svh]"
     >
-      <Container className="grid grid-cols-1 items-center gap-8 pt-12 pb-8 md:grid-cols-12 md:gap-12 md:pt-16">
-        <HeroEntrance className="flex flex-col items-start gap-6 md:col-span-7 md:col-start-2 md:gap-8">
+      <Container className="grid grid-cols-1 items-center gap-8 pt-20 pb-8 md:grid-cols-12 md:gap-12 md:pt-24">
+        <HeroEntrance className="flex flex-col items-start gap-4 md:col-span-7 md:col-start-2 md:gap-6">
           <h1 className="font-display text-[clamp(2.25rem,7vw,5.5rem)] font-medium leading-[1.0] tracking-[-0.02em] text-foreground sm:text-[clamp(2.5rem,6vw,5.5rem)]">
             Chibuike
             <br />
