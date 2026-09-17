@@ -33,15 +33,21 @@ export function Contact({ socialLinks = [] }: { socialLinks?: SocialLink[] }) {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <p className="mt-6 max-w-prose font-sans text-base text-muted">
+          <p className="mt-6 max-w-prose font-sans text-[0.95rem] leading-relaxed text-muted sm:text-base">
             For opportunities, questions about the work here, or anything else —
             the fastest route is email.
           </p>
+          <a
+            href="mailto:chibuikenwozor@gmail.com"
+            className="mt-3 inline-block font-mono text-sm text-accent underline underline-offset-4 transition-colors hover:text-accent/80 sm:text-base"
+          >
+            chibuikenwozor@gmail.com
+          </a>
         </Reveal>
 
         <Reveal delay={0.2}>
-          <form action={formAction} className="mt-12 max-w-[560px] space-y-10">
-          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2">
+          <form action={formAction} className="mt-10 max-w-[560px] space-y-8 sm:mt-12 sm:space-y-10">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10">
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="contact-name"

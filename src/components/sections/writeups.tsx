@@ -31,7 +31,7 @@ export function Writeups() {
                 <span>{writeup.date}</span>
                 <span className="opacity-60">{writeup.read}</span>
               </div>
-              <h3 className="font-display text-[clamp(1.5rem,4vw,3rem)] font-medium leading-tight tracking-[-0.01em] text-foreground/80 transition-colors duration-200 group-hover:text-accent">
+              <h3 className="font-display text-[clamp(1.25rem,4vw,3rem)] font-medium leading-tight tracking-[-0.01em] text-foreground/80 transition-colors duration-200 group-hover:text-accent sm:text-[clamp(1.5rem,4vw,3rem)]">
                 {writeup.title}
               </h3>
             </li>

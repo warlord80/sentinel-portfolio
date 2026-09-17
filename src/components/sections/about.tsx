@@ -15,7 +15,7 @@ export function About() {
           <Reveal>
             <SectionHeading index="01" eyebrow="Profile" title="About" />
           </Reveal>
-          <Reveal delay={0.1} className="prose-max mt-8 flex flex-col gap-5 font-sans text-base leading-[1.7] text-foreground/85">
+          <Reveal delay={0.1} className="prose-max mt-8 flex flex-col gap-5 font-sans text-[0.95rem] leading-[1.75] text-foreground/85 sm:text-base sm:leading-[1.7]">
             <p>
               A cybersecurity analyst focused on SOC operations, security
               monitoring and incident investigation. This portfolio documents

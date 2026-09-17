@@ -24,7 +24,7 @@ export function Certifications() {
         <SectionHeading index="05" eyebrow="Credentials" title="Certifications" />
       </Reveal>
 
-      <div className="mt-16 grid grid-cols-2 gap-4 md:grid-cols-4">
+      <div className="mt-12 grid grid-cols-2 gap-3 sm:mt-16 sm:gap-4 md:grid-cols-4">
         {certs.map((cert, i) => (
           <Reveal key={i} delay={i * 0.08}>
             <article

@@ -60,7 +60,7 @@ export function Footer() {
   }, []);
 
   return (
-    <footer className="relative mt-24 overflow-hidden border-t border-line">
+    <footer className="relative mt-16 overflow-hidden border-t border-line sm:mt-24">
       <Container className="pb-10 pt-16">
         <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
           © {new Date().getFullYear()} Chibuike Nwozor

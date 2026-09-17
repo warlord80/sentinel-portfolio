@@ -203,7 +203,7 @@ export function GlitchText() {
   return (
     <div
       ref={containerRef}
-      className="h-[1.4em] overflow-hidden font-mono text-[0.85em] tracking-[0.15em] text-muted"
+      className="relative h-[1.4em] w-full overflow-hidden font-mono text-[0.8em] tracking-[0.15em] text-muted sm:text-[0.85em]"
       aria-label={ROLES[0]}
       aria-hidden="true"
     />

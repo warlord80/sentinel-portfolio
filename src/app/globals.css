@@ -112,6 +112,14 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Mobile typography — slightly larger body text for readability */
+@media (max-width: 640px) {
+  body {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+}
+
 ::selection {
   background-color: var(--c-accent);
   color: var(--c-bg);
@@ -319,6 +327,11 @@ select:focus {
 @keyframes subtle-fade-out {
   from { opacity: 1; transform: translateY(0); }
   to { opacity: 0.4; transform: translateY(-8px); }
+}
+
+/* ── Section Divider (subtle surface shift) ────────────────────── */
+.section-alt {
+  background-color: rgba(22, 24, 29, 0.35);
 }
 
 

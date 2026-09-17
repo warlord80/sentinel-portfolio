@@ -72,21 +72,18 @@ export function Projects() {
                   />
                 </div>
               )}
-              <div className="p-6 sm:p-8">
+              <div className="p-5 sm:p-8">
                 <div className="flex items-start justify-between">
-                  <span className="font-mono text-sm tracking-tight text-accent">
+                  <span className="font-mono text-xs tracking-tight text-accent sm:text-sm">
                     {project.number}
                   </span>
                   <Tag>{project.status}</Tag>
                 </div>
 
-                <div className="mt-8 flex flex-col gap-3">
-                  <h3 className="font-display text-[clamp(1.375rem,2.5vw,2.25rem)] font-medium leading-tight tracking-[-0.01em] text-foreground">
+                <div className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:gap-3">
+                  <h3 className="font-display text-lg font-medium leading-tight tracking-[-0.01em] text-foreground sm:text-[clamp(1.375rem,2.5vw,2.25rem)]">
                     {project.title}
                   </h3>
-                  <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted">
-                    {project.category}
-                  </p>
                   <p className="max-w-md text-sm leading-relaxed text-foreground/70">
                     {project.description}
                   </p>
@@ -97,7 +94,7 @@ export function Projects() {
                   </div>
                 </div>
 
-                <div className="mt-6">
+                <div className="mt-5 sm:mt-6">
                   <Button href="#contact" variant="ghost" size="sm">
                     Explore Case Study
                   </Button>

@@ -28,13 +28,13 @@ const timeline = [
  */
 export function Experience() {
   return (
-    <section id="experience" className="scroll-mt-24 py-[96px] max-md:py-[64px]">
+    <section id="experience" className="scroll-mt-24 py-[96px] max-md:py-[64px] section-alt border-t border-b border-line/50">
       <Container>
       <Reveal>
         <SectionHeading index="04" eyebrow="Career" title="Experience" />
       </Reveal>
 
-      <div className="mt-16 border-l border-line pl-4 sm:pl-8 md:ml-8">
+      <div className="mt-12 border-l border-line pl-4 sm:mt-16 sm:pl-8 md:ml-8">
         {timeline.map((role, i) => (
           <Reveal key={i} delay={i * 0.15}>
             <article

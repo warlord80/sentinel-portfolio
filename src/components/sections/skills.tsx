@@ -107,7 +107,7 @@ export function Skills() {
   }, [isMobile]);
 
   return (
-    <section id="skills" className="scroll-mt-24 py-[96px] max-md:py-[64px]">
+    <section id="skills" className="scroll-mt-24 py-[96px] max-md:py-[64px] section-alt border-t border-b border-line/50">
       <Container>
         <Reveal>
           <SectionHeading index="02" eyebrow="Capability" title="Skills" />

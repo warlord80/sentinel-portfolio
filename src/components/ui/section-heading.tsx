@@ -32,7 +32,7 @@ export function SectionHeading({
       )}
       <Tag
         id={id}
-        className="font-display text-[clamp(2rem,4vw,3.5rem)] font-medium leading-[1.1] tracking-[-0.01em] text-foreground"
+        className="font-display text-[clamp(1.75rem,5vw,3.5rem)] font-medium leading-[1.1] tracking-[-0.01em] text-foreground sm:text-[clamp(2rem,4vw,3.5rem)]"
       >
         {title}
       </Tag>

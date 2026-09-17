@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 
 const links = [
@@ -16,7 +16,7 @@ const links = [
  * content below the fixed top bar. Renders nothing on desktop widths.
  * Managed by the parent Navigation component via `open`.
  *
- * Includes keyboard focus trap and proper ARIA attributes.
+ * Includes keyboard focus trap, proper ARIA attributes, and active section detection.
  */
 export function MobileNavigation({
   open,
@@ -29,6 +29,30 @@ export function MobileNavigation({
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const linkRefs = useRef<HTMLAnchorElement[]>([]);
+  const [activeSection, setActiveSection] = useState("");
+
+  // Track which section is in view
+  useEffect(() => {
+    if (!open) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(`#${entry.target.id}`);
+          }
+        });
+      },
+      { threshold: 0.3 },
+    );
+
+    links.forEach((link) => {
+      const el = document.querySelector(link.href);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -51,7 +75,6 @@ export function MobileNavigation({
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
 
-    // Move focus to first link on open
     requestAnimationFrame(() => {
       linkRefs.current[0]?.focus();
     });
@@ -66,7 +89,7 @@ export function MobileNavigation({
     <div
       ref={panelRef}
       className={cn(
-        "fixed inset-0 top-16 z-30 flex flex-col bg-background px-6 pb-8 pt-4 md:hidden",
+        "fixed inset-0 top-16 z-30 flex flex-col bg-background/98 backdrop-blur-sm px-8 pb-8 pt-6 md:hidden",
         "transition-all duration-300 ease-out",
         open
           ? "opacity-100 translate-y-0"
@@ -76,25 +99,34 @@ export function MobileNavigation({
       aria-label="Mobile navigation"
       aria-hidden={!open}
     >
-      {links.map((link, i) => (
-        <a
-          key={link.href}
-          ref={(el) => { linkRefs.current[i] = el!; }}
-          href={link.href}
-          tabIndex={open ? 0 : -1}
-          onClick={(e) => {
-            e.preventDefault();
-            onNavigate(link.href);
-          }}
-          className={cn(
-            "border-b border-line py-5 font-display text-3xl font-medium tracking-tight text-foreground",
-            "transition-colors duration-150 hover:text-accent",
-          )}
-          style={{ transitionDelay: open ? `${i * 50}ms` : "0ms" }}
-        >
-          {link.label}
-        </a>
-      ))}
+      {links.map((link, i) => {
+        const isActive = activeSection === link.href;
+        return (
+          <a
+            key={link.href}
+            ref={(el) => { linkRefs.current[i] = el!; }}
+            href={link.href}
+            tabIndex={open ? 0 : -1}
+            onClick={(e) => {
+              e.preventDefault();
+              onNavigate(link.href);
+            }}
+            className={cn(
+              "border-b border-line/50 py-6 font-display text-2xl font-medium tracking-tight sm:text-3xl",
+              "transition-all duration-200",
+              isActive
+                ? "text-accent border-accent/30"
+                : "text-foreground/80 hover:text-accent hover:border-accent/20",
+            )}
+            style={{ transitionDelay: open ? `${i * 50}ms` : "0ms" }}
+          >
+            {isActive && (
+              <span className="mr-3 inline-block h-1.5 w-1.5 rounded-full bg-accent align-middle" />
+            )}
+            {link.label}
+          </a>
+        );
+      })}
     </div>
   );
 }
