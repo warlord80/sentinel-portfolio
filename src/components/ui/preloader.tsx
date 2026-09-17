@@ -1,81 +1,62 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
 
 const STORAGE_KEY = "sentinel-preloader-seen";
-const COUNT_DURATION = 1.5;
+const COUNT_MS = 1500;
+const HOLD_MS = 150;
+const EXIT_MS = 400;
 
 /**
  * Preloader — full-viewport sentinel-themed intro screen.
- * Runs once per session via sessionStorage. Simplified to avoid
- * gsap.context race conditions with React state updates.
+ * Uses requestAnimationFrame for the counter (no GSAP dependency)
+ * and CSS transitions for the exit. Avoids all GSAP/React lifecycle conflicts.
  */
 export function Preloader() {
   const [visible, setVisible] = useState(() => {
     if (typeof window === "undefined") return true;
     return !sessionStorage.getItem(STORAGE_KEY);
   });
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const [exiting, setExiting] = useState(false);
   const counterRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    if (!visible || !overlayRef.current) return;
+    if (!visible) return;
 
     document.body.style.overflow = "hidden";
-    const overlay = overlayRef.current;
-    const counter = counterRef.current;
-    let cancelled = false;
+    let raf: number;
+    let start: number | null = null;
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        if (cancelled) return;
-        sessionStorage.setItem(STORAGE_KEY, "1");
-        document.body.style.overflow = "";
+    const tick = (now: number) => {
+      if (start === null) start = now;
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / COUNT_MS, 1);
+      const pct = Math.round(progress * 100);
 
-        gsap.to(overlay, {
-          opacity: 0,
-          duration: 0.35,
-          ease: "power2.in",
-          onComplete: () => {
-            if (!cancelled) setVisible(false);
-          },
-        });
-      },
-    });
+      if (counterRef.current) {
+        counterRef.current.textContent = String(pct).padStart(2, "0") + "%";
+      }
 
-    const obj = { val: 0 };
-    tl.to(obj, {
-      val: 100,
-      duration: COUNT_DURATION,
-      ease: "power2.inOut",
-      onUpdate: () => {
-        if (counter && !cancelled) {
-          counter.textContent =
-            String(Math.round(obj.val)).padStart(2, "0") + "%";
-        }
-      },
-    });
+      if (progress < 1) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        // Count finished — hold briefly then exit
+        setTimeout(() => {
+          sessionStorage.setItem(STORAGE_KEY, "1");
+          setExiting(true);
 
-    tl.to({}, { duration: 0.15 });
+          setTimeout(() => {
+            document.body.style.overflow = "";
+            setVisible(false);
+          }, EXIT_MS);
+        }, HOLD_MS);
+      }
+    };
 
-    tl.to(
-      ".preloader-center",
-      { opacity: 0, y: -12, duration: 0.3, ease: "power2.in" },
-      "-=0.1",
-    );
-    tl.to(
-      ".preloader-footer",
-      { opacity: 0, duration: 0.25, ease: "power2.in" },
-      "-=0.25",
-    );
+    raf = requestAnimationFrame(tick);
 
     return () => {
-      cancelled = true;
-      tl.kill();
-      gsap.killTweensOf(overlay);
-      gsap.killTweensOf(".preloader-center");
-      gsap.killTweensOf(".preloader-footer");
+      cancelAnimationFrame(raf);
       document.body.style.overflow = "";
     };
   }, [visible]);
@@ -84,8 +65,7 @@ export function Preloader() {
 
   return (
     <div
-      ref={overlayRef}
-      className="pointer-events-auto fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background"
+      className={`pointer-events-auto fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background transition-opacity duration-500 ease-in ${exiting ? "opacity-0" : "opacity-100"}`}
     >
       {/* Radar pulse rings */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden="true">
@@ -95,7 +75,7 @@ export function Preloader() {
       </div>
 
       {/* Center mark */}
-      <div className="preloader-center relative flex flex-col items-center gap-5">
+      <div className={`preloader-center relative flex flex-col items-center gap-5 transition-all duration-300 ease-in ${exiting ? "-translate-y-3 opacity-0" : "translate-y-0 opacity-100"}`}>
         <div className="font-display text-3xl font-medium tracking-tight text-foreground sm:text-4xl">
           NWOZOR<span className="text-accent">.</span>
         </div>
@@ -111,7 +91,7 @@ export function Preloader() {
       </div>
 
       {/* Bottom readouts */}
-      <div className="preloader-footer absolute inset-x-0 bottom-0 flex items-end justify-between px-6 pb-6 sm:px-10 sm:pb-8">
+      <div className={`preloader-footer absolute inset-x-0 bottom-0 flex items-end justify-between px-6 pb-6 transition-opacity duration-300 ease-in sm:px-10 sm:pb-8 ${exiting ? "opacity-0" : "opacity-100"}`}>
         <div className="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-muted/60 max-sm:hidden">
           <div>SYS.08 // SEC_INITIALIZED</div>
           <div className="mt-0.5">BUILD_0719 // {new Date().getFullYear()}</div>
