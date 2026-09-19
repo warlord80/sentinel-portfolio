@@ -7,7 +7,6 @@ import { HeroEntrance } from "@/components/motion";
 import { GlitchText } from "@/components/ui/glitch-text";
 import { ResumeButton } from "@/components/ui/resume-button";
 import { useParallax } from "@/components/motion/use-parallax";
-import { HeroCursor } from "@/components/ui/hero-cursor";
 
 export function Hero({ resumeUrl = "/resume.pdf" }: { resumeUrl?: string }) {
   const spacerRef = useRef<HTMLDivElement>(null);
@@ -18,24 +17,6 @@ export function Hero({ resumeUrl = "/resume.pdf" }: { resumeUrl?: string }) {
       id="top"
       className="relative flex min-h-[85svh] items-center overflow-hidden max-md:min-h-[80svh]"
     >
-      {/* Liquid blobs */}
-      <div className="hero-blobs" aria-hidden="true">
-        <div className="hero-blob hero-blob--gold" />
-        <div className="hero-blob hero-blob--violet" />
-        <div className="hero-blob hero-blob--warm" />
-      </div>
-
-      {/* Dithered orb — desktop */}
-      <div className="hero-orb hidden md:block" aria-hidden="true" />
-      {/* Smaller orb — mobile */}
-      <div className="hero-orb md:hidden" aria-hidden="true" />
-
-      {/* Vignette */}
-      <div className="hero-vignette" aria-hidden="true" />
-
-      {/* Cursor */}
-      <HeroCursor />
-
       <Container className="relative z-10 grid grid-cols-1 items-center gap-8 pt-20 pb-8 md:grid-cols-12 md:gap-12 md:pt-24">
         <HeroEntrance className="flex flex-col items-start gap-4 md:col-span-7 md:col-start-2 md:gap-6">
           <h1 className="font-display text-[clamp(2.25rem,7vw,5.5rem)] font-medium leading-[1.0] tracking-[-0.02em] text-foreground sm:text-[clamp(2.5rem,6vw,5.5rem)]">

@@ -63,15 +63,14 @@ export function Projects() {
         </div>
       </Reveal>
 
-      <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2">
+      <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2">
         {projects.map((project, i) => (
           <Reveal key={project.number} delay={i * 0.1}>
             <article
               onPointerMove={onPointerMove}
               className={
                 "card-spotlight card-beam group flex flex-col justify-between rounded-md border border-line bg-surface/40 transition-all duration-220 hover:border-accent/50 " +
-                "max-md:static max-md:bg-surface-raised/60 " +
-                (i % 2 === 1 ? "md:mt-16" : "")
+                (i % 2 === 1 ? "md:mt-12" : "")
               }
             >
               {project.image && (
@@ -81,20 +80,20 @@ export function Projects() {
                     alt={project.title}
                     width={800}
                     height={224}
-                    className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105 sm:h-56"
+                    className="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-105 sm:h-44"
                   />
                 </div>
               )}
-              <div className="p-5 sm:p-8">
+              <div className="p-4 sm:p-5">
                 <div className="flex items-start justify-between">
-                  <span className="font-mono text-xs tracking-tight text-accent sm:text-sm">
+                  <span className="font-mono text-xs tracking-tight text-accent">
                     {project.number}
                   </span>
                   <Tag>{project.status}</Tag>
                 </div>
 
-                <div className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:gap-3">
-                  <h3 className="font-display text-lg font-medium leading-tight tracking-[-0.01em] text-foreground sm:text-[clamp(1.375rem,2.5vw,2.25rem)]">
+                <div className="mt-4 flex flex-col gap-2">
+                  <h3 className="font-display text-base font-medium leading-tight tracking-[-0.01em] text-foreground sm:text-lg">
                     {project.title}
                   </h3>
                   <p className="max-w-md text-sm leading-relaxed text-foreground/70">
@@ -107,7 +106,7 @@ export function Projects() {
                   </div>
                 </div>
 
-                <div className="mt-5 sm:mt-6">
+                <div className="mt-4">
                   <Button href="#contact" variant="ghost" size="sm">
                     Explore Case Study
                   </Button>

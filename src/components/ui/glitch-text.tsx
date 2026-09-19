@@ -94,7 +94,7 @@ export function GlitchText() {
           repeat: reps,
           onRepeat: () => { char.textContent = getRandomChar(); },
           color: () => {
-            const c = ["#c5a059", "#4a9eff", "#eae9e4"];
+            const c = ["#C99A4A", "#4a9eff", "#F3F1EB"];
             return c[Math.floor(Math.random() * c.length)];
           },
           onComplete: () => { char.textContent = getRandomChar(); },
@@ -163,7 +163,7 @@ export function GlitchText() {
 
       tl.to(
         char,
-        { color: "#8c8f99", duration: 0.2, ease: "power2.out" },
+        { color: "#AAA7A0", duration: 0.2, ease: "power2.out" },
         cd + rebuildDur * 0.3,
       );
     });

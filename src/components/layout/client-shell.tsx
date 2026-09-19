@@ -6,6 +6,7 @@ import { Navigation } from "@/components/layout/navigation";
 import { ThreeProvider } from "@/components/three/context";
 import { detectTier, type Tier } from "@/components/three/performance";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
+import { SiteCursor } from "@/components/ui/hero-cursor";
 
 // Direct imports — avoids pulling Three.js into main bundle via barrel
 const Scene = dynamic(
@@ -78,10 +79,17 @@ export function ClientShell({ children }: { children: ReactNode }) {
     <ErrorBoundary>
       <ThreeProvider tier={tier}>
         {showScene && <Scene />}
+        <SiteCursor />
+        {/* Site-wide liquid blobs */}
+        <div className="site-blobs" aria-hidden="true">
+          <div className="site-blob site-blob--gold" />
+          <div className="site-blob site-blob--violet" />
+          <div className="site-blob site-blob--warm" />
+        </div>
         <Navigation />
         <div className="site-noise" aria-hidden="true" />
         <SmoothScroll>
-          <main id="main-content" className="flex-1">
+          <main id="main-content" className="flex-1 relative z-10">
             <a
               href="#main-content"
               className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-sm focus:border focus:border-accent focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-accent"
