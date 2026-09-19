@@ -16,7 +16,7 @@ export function Hero({ resumeUrl = "/resume.pdf" }: { resumeUrl?: string }) {
   return (
     <section
       id="top"
-      className="hero-active relative flex min-h-[85svh] items-center overflow-hidden max-md:min-h-[80svh]"
+      className="relative flex min-h-[85svh] items-center overflow-hidden max-md:min-h-[80svh]"
     >
       {/* Liquid blobs */}
       <div className="hero-blobs" aria-hidden="true">
