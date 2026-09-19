@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { sanitizeString, sanitizeEmail } from "@/lib/sanitize";
+import { sendContactEmail } from "@/lib/email";
 import { headers } from "next/headers";
 import type { Project, Experience, Certification, Writeup } from "@/lib/types";
 
@@ -158,6 +159,11 @@ export async function submitContact(
     console.error("submitContact:", error.message);
     return { success: false, error: "Failed to send message. Please try again." };
   }
+
+  // Send notification email (fire-and-forget — don't block the response)
+  sendContactEmail({ name: cleanName, email: cleanEmail, message: cleanMessage }).catch(
+    (err) => console.error("Failed to send notification email:", err),
+  );
 
   return { success: true, error: "" };
 }
