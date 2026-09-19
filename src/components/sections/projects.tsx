@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useCallback } from "react";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Tag } from "@/components/ui/tag";
 import { Button } from "@/components/ui/button";
@@ -42,6 +45,14 @@ const projects = [
  * cards over the dark 3D backdrop. Physical tilt-on-hover is a Phase 3 concern.
  */
 export function Projects() {
+  const onPointerMove = useCallback((e: React.PointerEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    e.currentTarget.style.setProperty("--x", `${x}%`);
+    e.currentTarget.style.setProperty("--y", `${y}%`);
+  }, []);
+
   return (
     <section id="projects" className="scroll-mt-24 py-[96px] max-md:py-[64px]">
       <Container>
@@ -56,8 +67,10 @@ export function Projects() {
         {projects.map((project, i) => (
           <Reveal key={project.number} delay={i * 0.1}>
             <article
+              onPointerMove={onPointerMove}
               className={
-                "group flex flex-col justify-between rounded-md border border-line bg-surface/40 transition-colors duration-200 hover:border-accent/50 " +
+                "card-spotlight card-beam group flex flex-col justify-between rounded-md border border-line bg-surface/40 transition-all duration-220 hover:border-accent/50 " +
+                "max-md:static max-md:bg-surface-raised/60 " +
                 (i % 2 === 1 ? "md:mt-16" : "")
               }
             >

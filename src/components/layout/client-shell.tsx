@@ -79,6 +79,7 @@ export function ClientShell({ children }: { children: ReactNode }) {
       <ThreeProvider tier={tier}>
         {showScene && <Scene />}
         <Navigation />
+        <div className="site-noise" aria-hidden="true" />
         <SmoothScroll>
           <main id="main-content" className="flex-1">
             <a

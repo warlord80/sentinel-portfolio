@@ -12,16 +12,14 @@ const base =
   "min-h-[44px]";
 
 const variants: Record<Variant, string> = {
-  // Muted gold background, near-black text, gold glow; hover → brighten + lift
   primary:
-    "bg-[#B08D45] border border-[#B08D45] text-[#0f1014] font-semibold " +
-    "shadow-[0_0_12px_rgba(176,141,69,0.25)] " +
-    "hover:bg-[#c5a059] hover:border-[#c5a059] hover:-translate-y-0.5 hover:shadow-[0_0_20px_rgba(197,160,89,0.35)] " +
-    "active:translate-y-0 active:shadow-[0_0_8px_rgba(176,141,69,0.2)]",
-  // Near-black bg, thin gold-tinted border, light text; hover → gold border + tint
+    "btn-shine bg-gradient-to-br from-[#C99A4A] to-[#F1C870] border border-[#C99A4A] text-[#0A0A0D] font-semibold " +
+    "shadow-[0_0_16px_rgba(201,154,74,0.3)] " +
+    "hover:shadow-[0_0_28px_rgba(201,154,74,0.45)] hover:-translate-y-0.5 " +
+    "active:translate-y-0 active:shadow-[0_0_10px_rgba(201,154,74,0.2)]",
   secondary:
-    "bg-transparent border border-line text-foreground/80 " +
-    "hover:border-accent/60 hover:text-accent hover:bg-accent/5",
+    "bg-transparent border border-[rgba(201,154,74,0.25)] text-foreground/80 " +
+    "hover:border-accent/60 hover:text-accent hover:bg-[rgba(201,154,74,0.05)]",
   ghost:
     "bg-transparent border border-line text-foreground/70 hover:text-accent",
 };

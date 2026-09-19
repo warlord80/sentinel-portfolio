@@ -8,33 +8,25 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface RevealProps {
   children: ReactNode;
-  /** ScrollTrigger trigger element selector — defaults to the wrapper div */
   trigger?: string;
-  /** Delay before animation starts (seconds) */
   delay?: number;
-  /** Duration of the animation (seconds) */
   duration?: number;
-  /** Vertical offset to animate from (px) */
   y?: number;
-  /** Additional className on the wrapper */
   className?: string;
-  /** Stagger children by this amount (seconds). 0 = no stagger */
   stagger?: number;
-  /** Whether the element has already been revealed (prevents flash) */
   reveal?: boolean;
 }
 
 /**
- * Generic scroll-triggered reveal wrapper. Fades + slides content into view
- * when it crosses the scroll threshold. Uses a subtle ease-out with slight
- * scale for a more premium feel. Disabled entirely when the user prefers
- * reduced motion.
+ * Scroll-triggered reveal: opacity 0→1, blur 8px→0, translateY 20px→0.
+ * Reduced to 12px upward for cards (via stagger > 0).
+ * Disabled when user prefers reduced motion.
  */
 export function Reveal({
   children,
   delay = 0,
-  duration = 0.9,
-  y = 30,
+  duration = 0.6,
+  y = 20,
   className,
   stagger = 0,
   reveal = true,
@@ -52,7 +44,7 @@ export function Reveal({
 
     const targets = stagger > 0 ? Array.from(el.children) : [el];
 
-    gsap.set(targets, { opacity: 0, y, scale: 0.99 });
+    gsap.set(targets, { opacity: 0, y, filter: "blur(8px)", scale: 1 });
 
     const trig = ScrollTrigger.create({
       trigger: el,
@@ -62,6 +54,7 @@ export function Reveal({
         gsap.to(targets, {
           opacity: 1,
           y: 0,
+          filter: "blur(0px)",
           scale: 1,
           duration,
           delay,

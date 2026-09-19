@@ -7,26 +7,36 @@ import { HeroEntrance } from "@/components/motion";
 import { GlitchText } from "@/components/ui/glitch-text";
 import { ResumeButton } from "@/components/ui/resume-button";
 import { useParallax } from "@/components/motion/use-parallax";
+import { HeroCursor } from "@/components/ui/hero-cursor";
 
-/**
- * Hero — asymmetric. The 3D Monolith occupies the mid-ground right via the
- * WebGL EnvironmentLayer (z-1, pointer-events none). This section reserves
- * layout space so the text doesn't overlap the monolith's visual position.
- * The monolith is NOT rendered here — it lives in the scene graph.
- *
- * Subtle scroll parallax is applied to decorative elements for depth.
- */
 export function Hero({ resumeUrl = "/resume.pdf" }: { resumeUrl?: string }) {
   const spacerRef = useRef<HTMLDivElement>(null);
-
   useParallax(spacerRef, { amount: -60, speed: 0.8 });
 
   return (
     <section
       id="top"
-      className="relative flex min-h-[85svh] items-center overflow-hidden max-md:min-h-[80svh]"
+      className="hero-active relative flex min-h-[85svh] items-center overflow-hidden max-md:min-h-[80svh]"
     >
-      <Container className="grid grid-cols-1 items-center gap-8 pt-20 pb-8 md:grid-cols-12 md:gap-12 md:pt-24">
+      {/* Liquid blobs */}
+      <div className="hero-blobs" aria-hidden="true">
+        <div className="hero-blob hero-blob--gold" />
+        <div className="hero-blob hero-blob--violet" />
+        <div className="hero-blob hero-blob--warm" />
+      </div>
+
+      {/* Dithered orb — desktop */}
+      <div className="hero-orb hidden md:block" aria-hidden="true" />
+      {/* Smaller orb — mobile */}
+      <div className="hero-orb md:hidden" aria-hidden="true" />
+
+      {/* Vignette */}
+      <div className="hero-vignette" aria-hidden="true" />
+
+      {/* Cursor */}
+      <HeroCursor />
+
+      <Container className="relative z-10 grid grid-cols-1 items-center gap-8 pt-20 pb-8 md:grid-cols-12 md:gap-12 md:pt-24">
         <HeroEntrance className="flex flex-col items-start gap-4 md:col-span-7 md:col-start-2 md:gap-6">
           <h1 className="font-display text-[clamp(2.25rem,7vw,5.5rem)] font-medium leading-[1.0] tracking-[-0.02em] text-foreground sm:text-[clamp(2.5rem,6vw,5.5rem)]">
             Chibuike
@@ -43,7 +53,7 @@ export function Hero({ resumeUrl = "/resume.pdf" }: { resumeUrl?: string }) {
           </p>
 
           <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-            <Button href="#projects" className="w-full sm:w-auto">
+            <Button href="#projects" className="btn-shine w-full sm:w-auto">
               Explore Work
             </Button>
             <Button href="#contact" variant="secondary" className="w-full sm:w-auto">
@@ -53,10 +63,6 @@ export function Hero({ resumeUrl = "/resume.pdf" }: { resumeUrl?: string }) {
           <ResumeButton href={resumeUrl} className="w-full sm:w-auto" />
         </HeroEntrance>
 
-        {/* Monolith layout spacer — reserves column space so the text
-            doesn't overlap the WebGL monolith rendered in EnvironmentLayer.
-            Invisible; the 3D monolith renders behind at z-[-1].
-            Has subtle scroll parallax for depth. */}
         <div
           ref={spacerRef}
           className="relative hidden md:col-span-4 md:block"
