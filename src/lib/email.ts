@@ -2,7 +2,9 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM = "Portfolio <notifications@chibuike.dev>";
+// Free tier: use onboarding@resend.dev (works immediately, no domain setup).
+// To use your own domain: verify it at resend.com/domains, then update FROM.
+const FROM = "onboarding@resend.dev";
 const TO = "chibuikenwozor@gmail.com";
 
 export async function sendContactEmail({
