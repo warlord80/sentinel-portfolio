@@ -439,13 +439,13 @@ select:focus {
 
 .site-cursor-glow {
   position: fixed;
-  width: 200px;
-  height: 200px;
+  width: 320px;
+  height: 320px;
   border-radius: 50%;
   pointer-events: none;
   z-index: 5;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(201,154,74,0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(201,154,74,0.18) 0%, transparent 70%);
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -487,7 +487,7 @@ select:focus {
   left: -60%;
   width: 40%;
   height: 200%;
-  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%);
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.4) 50%, transparent 60%);
   transform: skewX(-20deg);
   transition: left 0.5s ease;
   pointer-events: none;
@@ -509,7 +509,7 @@ select:focus {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(500px circle at var(--x) var(--y), rgba(201,154,74,0.12), transparent 42%);
+  background: radial-gradient(600px circle at var(--x) var(--y), rgba(201,154,74,0.22), transparent 42%);
   opacity: 0;
   transition: opacity 0.22s ease;
   pointer-events: none;
