@@ -19,6 +19,7 @@ const projects = [
     status: "Draft",
     description: "Placeholder — detection engineering and investigation practice environment.",
     image: "",
+    url: "",
   },
   {
     number: "02",
@@ -28,6 +29,7 @@ const projects = [
     status: "Draft",
     description: "Placeholder — protocol and packet-level analysis workflow.",
     image: "",
+    url: "",
   },
   {
     number: "03",
@@ -37,6 +39,7 @@ const projects = [
     status: "Draft",
     description: "Placeholder — identity and access configuration review.",
     image: "",
+    url: "",
   },
 ];
 
@@ -107,9 +110,15 @@ export function Projects() {
                 </div>
 
                 <div className="mt-4">
-                  <Button href="#contact" variant="ghost" size="sm">
-                    Explore Case Study
-                  </Button>
+                  {project.url ? (
+                    <Button href={project.url} variant="ghost" size="sm" target="_blank" rel="noopener noreferrer">
+                      View Live Project ↗
+                    </Button>
+                  ) : (
+                    <Button href="#contact" variant="ghost" size="sm">
+                      Explore Case Study
+                    </Button>
+                  )}
                 </div>
               </div>
             </article>

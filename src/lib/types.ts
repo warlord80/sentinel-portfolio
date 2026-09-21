@@ -15,6 +15,8 @@ export interface Project {
   slug: string;
   /** Optional hero image path (relative to /public) */
   image?: string;
+  /** Optional external URL (live demo link) */
+  url?: string;
   /** Display order (lower = first) */
   order: number;
   created_at: string;

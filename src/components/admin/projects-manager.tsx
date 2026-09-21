@@ -24,6 +24,7 @@ export function ProjectsManager({ projects: initial }: ProjectsPageProps) {
     description: "",
     slug: "",
     image: "",
+    url: "",
     order: projects.length,
   };
 
@@ -138,6 +139,7 @@ function ProjectForm({
         <Field label="Status" value={form.status} onChange={(v) => set("status", v)} />
         <Field label="Order" value={String(form.order)} onChange={(v) => set("order", Number(v))} />
         <Field label="Tech (comma-sep)" value={form.tech.join(", ")} onChange={(v) => set("tech", v.split(",").map((s) => s.trim()).filter(Boolean))} />
+        <Field label="Live URL" value={form.url ?? ""} onChange={(v) => set("url", v)} />
       </div>
 
       {/* Image upload */}
