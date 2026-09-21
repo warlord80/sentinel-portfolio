@@ -136,7 +136,18 @@ function ProjectForm({
         <Field label="Slug" value={form.slug} onChange={(v) => set("slug", v)} />
         <Field label="Category" value={form.category} onChange={(v) => set("category", v)} />
         <Field label="Number" value={form.number} onChange={(v) => set("number", v)} />
-        <Field label="Status" value={form.status} onChange={(v) => set("status", v)} />
+        <div className="flex flex-col gap-1">
+          <label className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">Status</label>
+          <select
+            value={form.status}
+            onChange={(e) => set("status", e.target.value)}
+            className="w-full rounded-sm border border-line bg-background px-3 py-2 font-sans text-sm text-foreground focus:border-accent focus:outline-none"
+          >
+            <option value="Draft">Draft</option>
+            <option value="Published">Published</option>
+            <option value="Archived">Archived</option>
+          </select>
+        </div>
         <Field label="Order" value={String(form.order)} onChange={(v) => set("order", Number(v))} />
         <Field label="Tech (comma-sep)" value={form.tech.join(", ")} onChange={(v) => set("tech", v.split(",").map((s) => s.trim()).filter(Boolean))} />
         <Field label="Live URL" value={form.url ?? ""} onChange={(v) => set("url", v)} />
