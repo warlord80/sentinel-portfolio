@@ -2,31 +2,24 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { Tag } from "@/components/ui/tag";
 import { Container } from "@/components/layout/container";
 import { Reveal } from "@/components/motion";
+import type { Experience as ExperienceType } from "@/lib/types";
 
-// Placeholder timeline entries — structure and design only. Real roles,
-// companies and dates are filled via the CMS in later phases. No fabricated
-// experience is claimed.
-const timeline = [
+const fallback: ExperienceType[] = [
   {
+    id: "e1",
     period: "—",
     role: "Role Title Placeholder",
     company: "Company Placeholder",
     notes: ["Placeholder responsibility.", "Placeholder achievement."],
-  },
-  {
-    period: "—",
-    role: "Role Title Placeholder",
-    company: "Company Placeholder",
-    notes: ["Placeholder responsibility."],
+    order: 0,
+    created_at: "",
+    updated_at: "",
   },
 ];
 
-/**
- * Experience — classified vertical timeline. No corporate logos. A 1px
- * vertical line illuminates in Muted Brass on scroll (scroll-rhythm is a
- * Phase 3 concern; the rail is structural here).
- */
-export function Experience() {
+export function Experience({ initialExperiences = [] }: { initialExperiences?: ExperienceType[] }) {
+  const timeline = initialExperiences.length > 0 ? initialExperiences : fallback;
+
   return (
     <section id="experience" className="scroll-mt-24 py-[96px] max-md:py-[64px] section-alt border-t border-b border-line/50">
       <Container>
@@ -36,7 +29,7 @@ export function Experience() {
 
       <div className="mt-12 border-l border-line pl-4 sm:mt-16 sm:pl-8 md:ml-8">
         {timeline.map((role, i) => (
-          <Reveal key={i} delay={i * 0.15}>
+          <Reveal key={role.id} delay={i * 0.15}>
             <article
               className="relative pb-12 last:pb-0"
             >
