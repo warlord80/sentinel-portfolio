@@ -1,7 +1,5 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 // Free tier: use onboarding@resend.dev (works immediately, no domain setup).
 // To use your own domain: verify it at resend.com/domains, then update FROM.
 const FROM = "onboarding@resend.dev";
@@ -16,6 +14,13 @@ export async function sendContactEmail({
   email: string;
   message: string;
 }) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error("RESEND_API_KEY is not set — skipping email notification");
+    return;
+  }
+
+  const resend = new Resend(apiKey);
   const html = `
     <div style="font-family:system-ui,-apple-system,sans-serif;max-width:600px;margin:0 auto;padding:32px;background:#0A0A0D;color:#F3F1EB;border-radius:8px;border:1px solid rgba(255,255,255,0.1)">
       <h2 style="color:#C99A4A;font-size:20px;margin:0 0 24px">New Contact Form Submission</h2>
