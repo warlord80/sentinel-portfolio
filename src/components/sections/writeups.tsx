@@ -24,7 +24,7 @@ export function Writeups({ initialWriteups = [] }: { initialWriteups?: Writeup[]
         {writeups.map((writeup, i) => (
           <Reveal key={writeup.id} delay={i * 0.1}>
             <li
-              className="group flex flex-col gap-2 border-b border-line py-8 transition-colors"
+              className="group flex flex-col gap-2 border-b border-line py-5 transition-colors"
             >
               <div className="flex items-center justify-between gap-4 font-mono text-xs uppercase tracking-[0.14em] text-muted">
                 <span>{writeup.date}</span>

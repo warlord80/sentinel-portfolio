@@ -85,7 +85,7 @@ export function Projects({ initialProjects = [] }: { initialProjects?: Project[]
             <article
               onPointerMove={onPointerMove}
               className={
-                "card-spotlight card-beam group flex flex-col justify-between rounded-md border border-line bg-surface/40 transition-all duration-220 hover:border-accent/50 " +
+                "card-spotlight card-beam group flex flex-col justify-between rounded-lg border border-line bg-surface/40 transition-all duration-220 hover:border-accent/50 " +
                 (i % 2 === 1 ? "md:mt-12" : "")
               }
             >
