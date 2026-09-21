@@ -543,4 +543,111 @@ select:focus {
   left: 110%;
 }
 
+/* ── Prose Sentinel (markdown content styling) ─────────────────── */
+.prose-sentinel {
+  color: var(--c-text);
+  font-family: var(--font-sans);
+  line-height: 1.75;
+}
+
+.prose-sentinel h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--c-text);
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-sentinel h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--c-text);
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-sentinel p {
+  margin-bottom: 1.25rem;
+  color: var(--c-text-secondary);
+  font-size: 0.95rem;
+}
+
+.prose-sentinel strong {
+  color: var(--c-text);
+  font-weight: 600;
+}
+
+.prose-sentinel ul,
+.prose-sentinel ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.prose-sentinel li {
+  margin-bottom: 0.5rem;
+  color: var(--c-text-secondary);
+  font-size: 0.95rem;
+}
+
+.prose-sentinel code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--c-surface-raised);
+  border: 1px solid var(--c-border);
+  border-radius: 3px;
+  padding: 0.15em 0.4em;
+  color: var(--c-accent);
+}
+
+.prose-sentinel pre {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.prose-sentinel pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.85rem;
+  color: var(--c-text-secondary);
+}
+
+.prose-sentinel blockquote {
+  margin-bottom: 1.25rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--c-accent);
+  color: var(--c-text-secondary);
+  font-style: italic;
+}
+
+.prose-sentinel a {
+  color: var(--c-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s;
+}
+
+.prose-sentinel a:hover {
+  color: var(--c-accent-bright);
+}
+
+.prose-sentinel hr {
+  border: none;
+  border-top: 1px solid var(--c-border);
+  margin: 2rem 0;
+}
+
+.prose-sentinel h2:first-child,
+.prose-sentinel h3:first-child {
+  margin-top: 0;
+}
+
 

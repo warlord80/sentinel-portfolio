@@ -1,19 +1,18 @@
+import Link from "next/link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Container } from "@/components/layout/container";
 import { Reveal } from "@/components/motion";
+import type { Writeup } from "@/lib/types";
 
-// Placeholder writeups — journal-style list. Replaced via the CMS later.
-const writeups = [
-  { title: "Writeup Title Placeholder — Detection Engineering Notes", date: "—", read: "— min" },
-  { title: "Writeup Title Placeholder — Incident Response Notes", date: "—", read: "— min" },
-  { title: "Writeup Title Placeholder — Networking Fundamentals", date: "—", read: "— min" },
+const fallback: Writeup[] = [
+  { id: "w1", title: "Writeup Title Placeholder — Detection Engineering Notes", date: "—", read: "— min", slug: "detection-engineering-notes", order: 0, created_at: "", updated_at: "" },
+  { id: "w2", title: "Writeup Title Placeholder — Incident Response Notes", date: "—", read: "— min", slug: "incident-response-notes", order: 1, created_at: "", updated_at: "" },
+  { id: "w3", title: "Writeup Title Placeholder — Networking Fundamentals", date: "—", read: "— min", slug: "networking-fundamentals", order: 2, created_at: "", updated_at: "" },
 ];
 
-/**
- * Writeups — clean list mimicking a premium technical journal. Massive
- * title treatment on hover; JetBrains Mono for dates and read times.
- */
-export function Writeups() {
+export function Writeups({ initialWriteups = [] }: { initialWriteups?: Writeup[] }) {
+  const writeups = initialWriteups.length > 0 ? initialWriteups : fallback;
+
   return (
     <section id="writeups" className="scroll-mt-24 py-[96px] max-md:py-[64px]">
       <Container>
@@ -23,7 +22,7 @@ export function Writeups() {
 
         <ul className="mt-10 flex flex-col border-t border-line">
         {writeups.map((writeup, i) => (
-          <Reveal key={i} delay={i * 0.1}>
+          <Reveal key={writeup.id} delay={i * 0.1}>
             <li
               className="group flex flex-col gap-2 border-b border-line py-8 transition-colors"
             >
@@ -31,9 +30,14 @@ export function Writeups() {
                 <span>{writeup.date}</span>
                 <span className="opacity-60">{writeup.read}</span>
               </div>
-              <h3 className="font-display text-[clamp(1.25rem,4vw,3rem)] font-medium leading-tight tracking-[-0.01em] text-foreground/80 transition-colors duration-200 group-hover:text-accent sm:text-[clamp(1.5rem,4vw,3rem)]">
-                {writeup.title}
-              </h3>
+              <Link
+                href={`/writeups/${writeup.slug}`}
+                className="block"
+              >
+                <h3 className="font-display text-[clamp(1.25rem,4vw,3rem)] font-medium leading-tight tracking-[-0.01em] text-foreground/80 transition-colors duration-200 group-hover:text-accent sm:text-[clamp(1.5rem,4vw,3rem)]">
+                  {writeup.title}
+                </h3>
+              </Link>
             </li>
           </Reveal>
         ))}
