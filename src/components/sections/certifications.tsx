@@ -1,52 +1,72 @@
+import Link from "next/link";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { Tag } from "@/components/ui/tag";
 import { Container } from "@/components/layout/container";
 import { Reveal } from "@/components/motion";
+import type { Certification } from "@/lib/types";
 
-// Placeholder certifications — geometric badge tiles only. No certification
-// is claimed as held; entries are filled via the CMS later.
-const certs = [
-  { initial: "A", name: "Certificate Placeholder", issuer: "Issuer" },
-  { initial: "B", name: "Certificate Placeholder", issuer: "Issuer" },
-  { initial: "C", name: "Certificate Placeholder", issuer: "Issuer" },
-  { initial: "D", name: "Certificate Placeholder", issuer: "Issuer" },
+const fallback: Certification[] = [
+  { id: "c1", initial: "S", name: "CompTIA Security+", issuer: "CompTIA", order: 0, created_at: "", updated_at: "" },
+  { id: "c2", initial: "C", name: "Cisco CyberOps Associate", issuer: "Cisco", order: 1, created_at: "", updated_at: "" },
 ];
 
-/**
- * Certifications — minimalist horizontal track of geometric badges.
- * Hover/tap reveal is a later-phase interaction.
- */
-export function Certifications() {
+export function Certifications({ initialCertifications = [] }: { initialCertifications?: Certification[] }) {
+  const certs = initialCertifications.length > 0 ? initialCertifications : fallback;
+
   return (
-    <section id="certifications" className="scroll-mt-24 py-[96px] max-md:py-[64px]">
+    <section id="certifications" className="scroll-mt-24 py-[96px] max-md:py-[64px] section-alt border-t border-b border-line/50">
       <Container>
       <Reveal>
         <SectionHeading index="05" eyebrow="Credentials" title="Certifications" />
       </Reveal>
 
-      <div className="mt-12 grid grid-cols-2 gap-3 sm:mt-16 sm:gap-4 md:grid-cols-4">
+      <div className="mt-12 grid grid-cols-1 gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-5">
         {certs.map((cert, i) => (
-          <Reveal key={i} delay={i * 0.08}>
-            <article
-              className="group flex flex-col items-start gap-4 rounded-md border border-line bg-surface/40 p-6 transition-colors duration-200 hover:border-accent/50"
-            >
-              <span
-                className="flex h-12 w-12 items-center justify-center rounded-md border border-accent/40 font-display text-lg font-medium text-accent"
-                aria-hidden="true"
+          <Reveal key={cert.id} delay={i * 0.1}>
+            {cert.url ? (
+              <Link
+                href={cert.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block"
               >
-                {cert.initial}
-              </span>
-              <div className="flex flex-col gap-1.5">
-                <h3 className="font-sans text-sm font-medium leading-snug text-foreground">
-                  {cert.name}
-                </h3>
-                <Tag>{cert.issuer}</Tag>
-              </div>
-            </article>
+                <CertCard cert={cert} />
+              </Link>
+            ) : (
+              <CertCard cert={cert} />
+            )}
           </Reveal>
         ))}
       </div>
       </Container>
     </section>
+  );
+}
+
+function CertCard({ cert }: { cert: Certification }) {
+  return (
+    <article className="group relative flex items-start gap-5 rounded-md border border-line bg-surface/40 p-6 transition-all duration-220 hover:border-accent/50 hover:bg-surface/60">
+      {/* Badge */}
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-md border border-accent/30 bg-accent/5 font-display text-xl font-medium text-accent transition-colors group-hover:border-accent/60 group-hover:bg-accent/10">
+        {cert.initial}
+      </div>
+
+      {/* Info */}
+      <div className="flex flex-col gap-2">
+        <h3 className="font-display text-base font-medium leading-snug text-foreground sm:text-lg">
+          {cert.name}
+        </h3>
+        <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted">
+          {cert.issuer}
+        </p>
+        {cert.url && (
+          <span className="font-mono text-xs text-accent opacity-0 transition-opacity group-hover:opacity-100">
+            Verify ↗
+          </span>
+        )}
+      </div>
+
+      {/* Hover glow */}
+      <div className="pointer-events-none absolute inset-0 rounded-md bg-gradient-to-br from-accent/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true" />
+    </article>
   );
 }

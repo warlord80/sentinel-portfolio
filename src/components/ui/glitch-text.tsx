@@ -97,7 +97,6 @@ export function GlitchText() {
             const c = ["#C99A4A", "#4a9eff", "#F3F1EB"];
             return c[Math.floor(Math.random() * c.length)];
           },
-          onComplete: () => { char.textContent = getRandomChar(); },
         },
         d,
       );
