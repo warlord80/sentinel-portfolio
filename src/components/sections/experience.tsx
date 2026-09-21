@@ -31,7 +31,7 @@ export function Experience({ initialExperiences = [] }: { initialExperiences?: E
         {timeline.map((role, i) => (
           <Reveal key={role.id} delay={i * 0.15}>
             <article
-              className="relative pb-12 last:pb-0"
+              className="relative pb-16 last:pb-0"
             >
               {/* Timeline node */}
               <span
