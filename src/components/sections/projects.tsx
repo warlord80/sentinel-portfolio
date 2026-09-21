@@ -7,47 +7,60 @@ import { Tag } from "@/components/ui/tag";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/container";
 import { Reveal } from "@/components/motion";
+import type { Project } from "@/lib/types";
 
-// Placeholder projects (PRD §57). Replaceable via the CMS in later phases.
-// No fabricated metrics or achievements are claimed.
-const projects = [
+// Fallback when CMS returns no published projects
+const fallback: Project[] = [
   {
+    id: "fallback-1",
     number: "01",
     title: "SIEM Detection & Investigation Lab",
     category: "SOC / Blue Team",
     tech: ["Splunk", "Sysmon", "Windows"],
     status: "Draft",
     description: "Placeholder — detection engineering and investigation practice environment.",
+    slug: "siem-detection-lab",
     image: "",
     url: "",
+    order: 0,
+    created_at: "",
+    updated_at: "",
   },
   {
+    id: "fallback-2",
     number: "02",
     title: "Network Traffic Analysis",
     category: "Network Security",
     tech: ["Wireshark", "tcpdump"],
     status: "Draft",
     description: "Placeholder — protocol and packet-level analysis workflow.",
+    slug: "network-traffic-analysis",
     image: "",
     url: "",
+    order: 1,
+    created_at: "",
+    updated_at: "",
   },
   {
+    id: "fallback-3",
     number: "03",
     title: "Cloud Security Assessment",
     category: "Cloud",
     tech: ["Azure", "IAM"],
     status: "Draft",
     description: "Placeholder — identity and access configuration review.",
+    slug: "cloud-security-assessment",
     image: "",
     url: "",
+    order: 2,
+    created_at: "",
+    updated_at: "",
   },
 ];
 
-/**
- * Projects — asymmetric 2-column layout with staggered, tactile editorial
- * cards over the dark 3D backdrop. Physical tilt-on-hover is a Phase 3 concern.
- */
-export function Projects() {
+export function Projects({ initialProjects = [] }: { initialProjects?: Project[] }) {
+  const projects = initialProjects.length > 0 ? initialProjects : fallback;
+
   const onPointerMove = useCallback((e: React.PointerEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -62,13 +75,13 @@ export function Projects() {
       <Reveal>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHeading index="03" eyebrow="Selected Work" title="Projects" />
-          <Tag tone="accent">Placeholders</Tag>
+          {initialProjects.length === 0 && <Tag tone="accent">Placeholders</Tag>}
         </div>
       </Reveal>
 
       <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2">
         {projects.map((project, i) => (
-          <Reveal key={project.number} delay={i * 0.1}>
+          <Reveal key={project.id} delay={i * 0.1}>
             <article
               onPointerMove={onPointerMove}
               className={
