@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback } from "react";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Tag } from "@/components/ui/tag";
-import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/container";
 import { Reveal } from "@/components/motion";
 import type { Project } from "@/lib/types";
@@ -90,7 +90,7 @@ export function Projects({ initialProjects = [] }: { initialProjects?: Project[]
               }
             >
               {project.image && (
-                <div className="overflow-hidden border-b border-line">
+                <Link href={`/projects/${project.slug}`} className="block overflow-hidden border-b border-line">
                   <Image
                     src={project.image}
                     alt={project.title}
@@ -98,7 +98,7 @@ export function Projects({ initialProjects = [] }: { initialProjects?: Project[]
                     height={224}
                     className="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-105 sm:h-44"
                   />
-                </div>
+                </Link>
               )}
               <div className="p-4 sm:p-5">
                 <div className="flex items-start justify-between">
@@ -110,7 +110,9 @@ export function Projects({ initialProjects = [] }: { initialProjects?: Project[]
 
                 <div className="mt-4 flex flex-col gap-2">
                   <h3 className="font-display text-base font-medium leading-tight tracking-[-0.01em] text-foreground sm:text-lg">
-                    {project.title}
+                    <Link href={`/projects/${project.slug}`} className="hover:text-accent transition-colors">
+                      {project.title}
+                    </Link>
                   </h3>
                   <p className="max-w-md text-sm leading-relaxed text-foreground/70">
                     {project.description}
@@ -122,15 +124,22 @@ export function Projects({ initialProjects = [] }: { initialProjects?: Project[]
                   </div>
                 </div>
 
-                <div className="mt-4">
-                  {project.url ? (
-                    <Button href={project.url} variant="ghost" size="sm" target="_blank" rel="noopener noreferrer">
-                      View Live Project ↗
-                    </Button>
-                  ) : (
-                    <Button href="#contact" variant="ghost" size="sm">
-                      Explore Case Study
-                    </Button>
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-accent transition-colors hover:text-accent/80"
+                  >
+                    View Case Study →
+                  </Link>
+                  {project.url && (
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-accent"
+                    >
+                      Live Project ↗
+                    </a>
                   )}
                 </div>
               </div>

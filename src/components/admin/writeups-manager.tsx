@@ -80,6 +80,7 @@ function WriteupForm({ initial, onSave, onCancel }: { initial: Omit<Writeup, "id
         <div className="flex flex-col gap-1"><label className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">Read time</label><input value={form.read} onChange={(e) => set("read", e.target.value)} className={cls} placeholder="5 min" /></div>
         <div className="flex flex-col gap-1"><label className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">Order</label><input value={String(form.order)} onChange={(e) => set("order", Number(e.target.value))} className={cls} /></div>
       </div>
+      <div className="flex flex-col gap-1"><label className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">Summary (for SEO / social cards)</label><textarea value={form.summary ?? ""} onChange={(e) => set("summary", e.target.value)} rows={2} className={cls} placeholder="Short description for search engines and social media previews." /></div>
       <div className="flex flex-col gap-1"><label className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">Content (Markdown)</label><textarea value={form.content ?? ""} onChange={(e) => set("content", e.target.value)} rows={10} className={cls} /></div>
       <div className="flex gap-3">
         <button onClick={() => onSave(form)} className="rounded-sm border border-accent bg-accent/10 px-4 py-2 font-mono text-xs uppercase tracking-wider text-accent hover:bg-accent/20">Save</button>

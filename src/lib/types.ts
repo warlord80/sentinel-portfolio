@@ -17,6 +17,10 @@ export interface Project {
   image?: string;
   /** Optional external URL (live demo link) */
   url?: string;
+  /** Optional GitHub repository URL */
+  github_url?: string;
+  /** Short summary for SEO and social metadata */
+  summary?: string;
   /** Display order (lower = first) */
   order: number;
   created_at: string;
@@ -59,6 +63,8 @@ export interface Writeup {
   slug: string;
   /** Full markdown content */
   content?: string;
+  /** Short summary for SEO and social metadata */
+  summary?: string;
   /** Display order (lower = first) */
   order: number;
   created_at: string;

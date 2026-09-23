@@ -25,6 +25,8 @@ export function ProjectsManager({ projects: initial }: ProjectsPageProps) {
     slug: "",
     image: "",
     url: "",
+    github_url: "",
+    summary: "",
     order: projects.length,
   };
 
@@ -188,6 +190,8 @@ function ProjectForm({
       </div>
 
       <Field label="Description" value={form.description} onChange={(v) => set("description", v)} multiline />
+      <Field label="Summary (for SEO)" value={form.summary ?? ""} onChange={(v) => set("summary", v)} multiline />
+      <Field label="GitHub URL" value={form.github_url ?? ""} onChange={(v) => set("github_url", v)} />
       <div className="flex gap-3">
         <button onClick={() => onSave(form)} className="rounded-sm border border-accent bg-accent/10 px-4 py-2 font-mono text-xs uppercase tracking-wider text-accent hover:bg-accent/20">Save</button>
         <button onClick={onCancel} className="rounded-sm border border-line px-4 py-2 font-mono text-xs uppercase tracking-wider text-muted hover:text-foreground">Cancel</button>
