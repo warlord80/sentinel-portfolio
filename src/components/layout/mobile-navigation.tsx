@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 
 const links = [
-  { label: "About", href: "#about" },
-  { label: "Projects", href: "#projects" },
-  { label: "Experience", href: "#experience" },
-  { label: "Writeups", href: "#writeups" },
-  { label: "Contact", href: "#contact" },
+  { label: "About", href: "/#about" },
+  { label: "Projects", href: "/#projects" },
+  { label: "Experience", href: "/#experience" },
+  { label: "Writeups", href: "/#writeups" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 /**
@@ -22,18 +22,20 @@ export function MobileNavigation({
   open,
   onClose,
   onNavigate,
+  isHome,
 }: {
   open: boolean;
   onClose: () => void;
   onNavigate: (href: string) => void;
+  isHome: boolean;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const linkRefs = useRef<HTMLAnchorElement[]>([]);
   const [activeSection, setActiveSection] = useState("");
 
-  // Track which section is in view
+  // Track which section is in view (only on homepage)
   useEffect(() => {
-    if (!open) return;
+    if (!open || !isHome) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -47,12 +49,13 @@ export function MobileNavigation({
     );
 
     links.forEach((link) => {
-      const el = document.querySelector(link.href);
+      const hash = link.href.slice(link.href.indexOf("#"));
+      const el = document.querySelector(hash);
       if (el) observer.observe(el);
     });
 
     return () => observer.disconnect();
-  }, [open]);
+  }, [open, isHome]);
 
   useEffect(() => {
     if (!open) return;
@@ -100,7 +103,8 @@ export function MobileNavigation({
       aria-hidden={!open}
     >
       {links.map((link, i) => {
-        const isActive = activeSection === link.href;
+        const hash = link.href.slice(link.href.indexOf("#"));
+        const isActive = isHome && activeSection === hash;
         return (
           <a
             key={link.href}

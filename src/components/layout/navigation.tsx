@@ -1,16 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { MobileNavigation } from "@/components/layout/mobile-navigation";
 import { useLenis } from "@/components/motion";
 
 const links = [
-  { label: "About", href: "#about" },
-  { label: "Projects", href: "#projects" },
-  { label: "Experience", href: "#experience" },
-  { label: "Writeups", href: "#writeups" },
-  { label: "Contact", href: "#contact" },
+  { label: "About", href: "/#about" },
+  { label: "Projects", href: "/#projects" },
+  { label: "Experience", href: "/#experience" },
+  { label: "Writeups", href: "/#writeups" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 /**
@@ -24,6 +26,9 @@ export function Navigation() {
   const [atTop, setAtTop] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const lenisRef = useLenis();
+  const pathname = usePathname();
+  const router = useRouter();
+  const isHome = pathname === "/";
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -48,15 +53,26 @@ export function Navigation() {
   const scrollTo = useCallback(
     (href: string) => {
       setMobileOpen(false);
-      const lenis = lenisRef?.current;
-      if (lenis) {
-        lenis.scrollTo(href, { offset: -64 });
-      } else {
-        const el = document.querySelector(href);
-        el?.scrollIntoView({ behavior: "smooth" });
+      // Extract the hash from the href (e.g. "/#about" → "#about")
+      const hash = href.includes("#") ? href.slice(href.indexOf("#")) : null;
+
+      if (!isHome && hash) {
+        // On a detail page — navigate to homepage with hash
+        router.push(href);
+        return;
+      }
+
+      if (hash) {
+        const lenis = lenisRef?.current;
+        if (lenis) {
+          lenis.scrollTo(hash, { offset: -64 });
+        } else {
+          const el = document.querySelector(hash);
+          el?.scrollIntoView({ behavior: "smooth" });
+        }
       }
     },
-    [lenisRef],
+    [lenisRef, isHome, router],
   );
 
   return (
@@ -72,16 +88,16 @@ export function Navigation() {
           className="mx-auto flex h-14 max-w-[var(--max-w)] items-center justify-between px-6 sm:h-16"
           aria-label="Primary"
         >
-          <a
-            href="#top"
+          <Link
+            href="/#top"
             onClick={(e) => {
               e.preventDefault();
-              scrollTo("#top");
+              scrollTo("/#top");
             }}
             className="font-display text-base font-medium tracking-tight shrink-0"
           >
             NWOZOR<span className="text-accent">.</span>
-          </a>
+          </Link>
 
           <ul className="hidden items-center gap-7 md:flex shrink-0">
             {links.map((link) => (
@@ -128,6 +144,7 @@ export function Navigation() {
         open={mobileOpen}
         onClose={() => setMobileOpen(false)}
         onNavigate={scrollTo}
+        isHome={isHome}
       />
     </>
   );

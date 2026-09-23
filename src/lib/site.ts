@@ -17,7 +17,7 @@ export const site = {
     "Chibuike Nwozor is a Cybersecurity Analyst and SOC Analyst in Nigeria focused on threat detection, SIEM monitoring, incident response, security operations, network security, and cloud security.",
   shortDescription:
     "Cybersecurity Analyst and SOC Analyst specializing in threat detection, SIEM, incident response, and security operations.",
-  ogImage: "/og-image.png",
+  ogImage: "/opengraph-image",
   locale: "en_NG",
   type: "website" as const,
   author: {
